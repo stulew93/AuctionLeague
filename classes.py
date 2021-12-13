@@ -26,15 +26,21 @@ class Team:
         self.midfielders = []
         self.forwards = []
 
-    # def __str__(self):
-    #
-    #     gk = ', '.join(self.goalkeepers["name"])
-    #     for g in self.goalkeeper:
-    #         gk += g["name"]
-    #
-    #     team_str = "Name: {}\n" \
-    #                "Goalkeeper: {}\n" \
-    #                "Defenders"
+    def __str__(self):
+
+        gk = ', '.join([g["name"] for g in self.goalkeeper])
+        defs = ', '.join([d["name"] for d in self.defenders])
+        mids = ', '.join([m["name"] for m in self.midfielders])
+        fwds = ', '.join([f["name"] for f in self.forwards])
+
+        team_str = "Name: " + self.name + "\n" \
+                   "Budget Remaining: £" + str(self.budget) + "m\n" \
+                   "Goalkeeper: " + gk + "\n" \
+                   "Defenders: " + defs + "\n" \
+                   "Midfielders: " + mids + "\n" \
+                   "Forwards: " + fwds
+
+        return team_str
 
     def recalculate_max_spend(self):
         if self.squad_members_needed == 0:
