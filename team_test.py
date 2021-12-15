@@ -1,18 +1,18 @@
-from classes import Team
+from class_file import Team
 
 player_dict = {
-    1: {"name": "David De Gea", "position": "GK", "club": "Man U"},
-    2: {"name": "Romelu Lukaku", "position": "FWD", "club": "Chels"},
-    3: {"name": "Mo Salah", "position": "MID", "club": "Lpool"},
-    4: {"name": "Joao Cancelo", "position": "DEF", "club": "Man C"},
-    5: {"name": "Conor Gallagher", "position": "MID", "club": "C Pal"},
-    6: {"name": "Kieran Tierney", "position": "DEF", "club": "Arsnl"},
-    7: {"name": "Raheem Sterling", "position": "MID", "club": "M City"},
-    8: {"name": "Heung-Min Son", "position": "MID", "club": "Spurs"},
-    9: {"name": "Callum Wilson", "position": "FWD", "club": "New U"},
-    10: {"name": "Jordan Pickford", "position": "GK", "club": "Evrtn"},
-    11: {"name": "Teemu Pukki", "position": "FWD", "club": "Nwich"},
-    12: {"name": "Zinedine Zidane", "position": "MID", "club": "Legends"},
+    1: {"name": "David De Gea", "position_short": "GK", "club": "Man U"},
+    2: {"name": "Romelu Lukaku", "position_short": "FWD", "club": "Chels"},
+    3: {"name": "Mo Salah", "position_short": "MID", "club": "Lpool"},
+    4: {"name": "Joao Cancelo", "position_short": "DEF", "club": "Man C"},
+    5: {"name": "Conor Gallagher", "position_short": "MID", "club": "C Pal"},
+    6: {"name": "Kieran Tierney", "position_short": "DEF", "club": "Arsnl"},
+    7: {"name": "Raheem Sterling", "position_short": "MID", "club": "M City"},
+    8: {"name": "Heung-Min Son", "position_short": "MID", "club": "Spurs"},
+    9: {"name": "Callum Wilson", "position_short": "FWD", "club": "New U"},
+    10: {"name": "Jordan Pickford", "position_short": "GK", "club": "Evrtn"},
+    11: {"name": "Teemu Pukki", "position_short": "FWD", "club": "Nwich"},
+    12: {"name": "Zinedine Zidane", "position_short": "MID", "club": "Legends"},
 }
 
 test_team = Team("Stuart")

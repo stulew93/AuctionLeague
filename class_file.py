@@ -17,8 +17,10 @@ class Team:
 
         if manager_required == 1:
             self.squad_members_needed = 12
+            self.final_squad_size = 12
         else:
             self.squad_members_needed = 11
+            self.final_squad_size = 11
 
         if manager_required == 1:
             self.manager = []
@@ -35,11 +37,12 @@ class Team:
         fwds = ', '.join([f["name"] for f in self.forwards])
 
         team_str = "Name: " + self.name + "\n" \
-                                          "Budget Remaining: £" + str(self.budget) + "m\n" \
-                                                                                     "Goalkeeper: " + gk + "\n" \
-                                                                                                           "Defenders: " + defs + "\n" \
-                                                                                                                                  "Midfielders: " + mids + "\n" \
-                                                                                                                                                           "Forwards: " + fwds
+                   "Budget Remaining: £" + str(self.budget) + "m\n" \
+                   "Squad Completion: " + str(self.squad_members_current) + "/" + str(self.final_squad_size) + "\n" \
+                   "Goalkeeper: " + gk + "\n" \
+                   "Defenders: " + defs + "\n" \
+                   "Midfielders: " + mids + "\n" \
+                   "Forwards: " + fwds
 
         return team_str
 
@@ -52,7 +55,7 @@ class Team:
 
     def add_squad_member(self, member: Dict, price: int):
 
-        position = member["position"]
+        position = member["position_short"]
 
         if position == 'MGR':
             self.manager.append(member)
@@ -72,16 +75,17 @@ class Team:
         self.budget -= price
         self.recalculate_max_spend()
 
+        print("Player added to squad.")
         return None
 
 
 class Auction:
 
-    def __init__(self):
-        self.teams = {}
+    def __init__(self, include_managers=False):
+        self.teams = []
         self.players = {}
         self.transaction_log = []
-        self.include_managers = False
+        self.include_managers = include_managers
         self.initial_budget = 100
 
     def get_player_info_from_api(self):
@@ -106,4 +110,15 @@ class Auction:
 
             self.players[player_formatted["id"]] = player_formatted
 
-        return 'Player data loaded.'
+        print('Player data loaded.')
+        return None
+
+    def add_team(self, name: str):
+
+        if name in [team.name for team in self.teams]:
+            print('Team name already exists.')
+            return None
+        else:
+            new_team = Team(name=name, manager_required=self.include_managers)
+            self.teams.append(new_team)
+            return None
