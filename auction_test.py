@@ -1,7 +1,7 @@
 from classes.auction import Auction
 from classes.team import Team
 
-test_auction = Auction()
+test_auction = Auction(include_managers=1)
 
 test_auction.get_player_info_from_api()
 

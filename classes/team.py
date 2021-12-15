@@ -5,6 +5,7 @@ class Team:
 
     def __init__(self, name: str, manager_required: bool = 0):
         self.name = name
+        self.manager_required = manager_required
         self.budget = 100
 
         if manager_required == 1:
@@ -30,14 +31,22 @@ class Team:
 
     def __str__(self):
 
+        if self.manager_required == 1:
+            mgr = ', '.join([m for m in self.manager])
         gk = ', '.join([g["web_name"] for g in self.goalkeeper])
         defs = ', '.join([d["web_name"] for d in self.defenders])
         mids = ', '.join([m["web_name"] for m in self.midfielders])
         fwds = ', '.join([f["web_name"] for f in self.forwards])
 
+        if self.manager_required == 1:
+            manager_str = "Manager: " + mgr + "\n"
+        else:
+            manager_str = ''
+
         team_str = "Name: " + self.name + "\n" \
                    "Budget Remaining: £" + str(self.budget) + "m\n" \
                    "Squad Completion: " + str(self.squad_members_current) + "/" + str(self.final_squad_size) + "\n" \
+                   + manager_str + \
                    "Goalkeeper: " + gk + "\n" \
                    "Defenders: " + defs + "\n" \
                    "Midfielders: " + mids + "\n" \
