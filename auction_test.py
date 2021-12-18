@@ -31,4 +31,4 @@ for team in test_auction.teams:
     print("****************")
 
 
-print(test_auction.teams[0].club_count)
+test_auction.nominate_player(1)

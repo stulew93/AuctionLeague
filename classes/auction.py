@@ -13,7 +13,7 @@ class Auction:
         self.include_managers = include_managers
         self.initial_budget = 100
 
-    def get_player_info_from_api(self):
+    def get_player_info_from_api(self) -> None:
         url = 'https://fantasy.premierleague.com/api/bootstrap-static/'
 
         r = requests.get(url)
@@ -39,17 +39,17 @@ class Auction:
         print('Player data loaded.')
         return None
 
-    def add_team(self, name: str):
+    def add_team(self, name: str) -> None:
 
         if name in [team.name for team in self.teams]:
             print('Team name already exists.')
-            return None
         else:
             new_team = Team(name=name, manager_required=self.include_managers)
             self.teams.append(new_team)
-            return None
 
-    def add_member_to_team(self, member_id: int, team: Team, price: int):
+        return None
+
+    def add_member_to_team(self, member_id: int, team: Team, price: int) -> None:
 
         player = self.players[member_id]  # TODO: Add in functionality for managers.
         team.add_squad_member(player, price)
@@ -58,7 +58,7 @@ class Auction:
 
     def get_club_eligibility(self, member_id: int, team: Team) -> str:
         club_short = self.players[member_id]["club_short"]
-        club_long = self.players[member_id]["club_long"]
+        club_long = self.players[member_id]["club"]
         if club_short in team.club_count:
             if team.club_count == 3:
                 return "Ineligible. Team already has three players from {}.".format(club_long)
@@ -130,5 +130,7 @@ class Auction:
 
         return team_eligibility
 
-    def nominate_player(self):
+    def nominate_player(self, member_id: int):
+        # TODO: add check that player isn't already owned.
+        print(self.get_eligible_teams(member_id))
         return None
