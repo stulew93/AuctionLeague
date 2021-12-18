@@ -1,4 +1,5 @@
 from typing import Dict
+import datetime
 
 from classes.team import Team
 import requests
@@ -54,6 +55,14 @@ class Auction:
         player = self.players[member_id]  # TODO: Add in functionality for managers.
         team.add_squad_member(player, price)
         self.players[member_id]["player_purchased"] = 1
+
+        timestamp = str(datetime.datetime.utcnow())
+        transaction_info = {"player": player["web_name"],
+                            "club": player["club_short"],
+                            "team": team.name,
+                            "price": price,
+                            "timestamp": timestamp}
+        self.transaction_log.append(transaction_info)
         return None
 
     def get_club_eligibility(self, member_id: int, team: Team) -> str:
@@ -80,8 +89,6 @@ class Auction:
         elif player_position == 'GKP':
             if num_gkp == 1:
                 eligibility_reason = "Ineligible. Team already has a goalkeeper."
-            else:
-                eligibility_reason = "Eligible."
         elif player_position == 'DEF':
             if num_def + num_mid + num_fwd == 10:
                 eligibility_reason = "Ineligible. Team already has 10 outfield players."
@@ -108,7 +115,7 @@ class Auction:
 
         return eligibility_reason
 
-    def get_eligible_teams(self, member_id: int) -> Dict:
+    def get_teams_eligibility(self, member_id: int) -> Dict:
 
         team_eligibility = {}
 
@@ -125,12 +132,19 @@ class Auction:
                 eligibility_reason = 'Eligible.'
                 eligibility_flag = 1
 
-            team_eligibility[team] = {"eligibility_flag": eligibility_flag,
-                                      "eligibility_reason": eligibility_reason}
+            team_eligibility[team.name] = {"eligibility_flag": eligibility_flag,
+                                           "eligibility_reason": eligibility_reason}
 
         return team_eligibility
 
     def nominate_player(self, member_id: int):
-        # TODO: add check that player isn't already owned.
-        print(self.get_eligible_teams(member_id))
+        if self.players[member_id]["player_purchased"] == 1:
+            print("Player has already been purchased.")
+        else:
+            player = self.players[member_id]
+            print("Player nominated: {0} {1} ({2}), {3}, {4}"
+                  .format(player["first_name"], player["second_name"], player["web_name"],
+                          player["position_short"], player["club"]))
+            print(self.get_teams_eligibility(member_id))
+
         return None

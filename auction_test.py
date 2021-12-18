@@ -1,5 +1,6 @@
 from classes.auction import Auction
 from classes.team import Team
+import datetime
 
 test_auction = Auction(include_managers=0)
 
@@ -30,5 +31,8 @@ for team in test_auction.teams:
     print(team)
     print("****************")
 
+print(test_auction.transaction_log)
+print(datetime.datetime.utcnow())
 
-test_auction.nominate_player(1)
+test_auction.nominate_player(2)
+
