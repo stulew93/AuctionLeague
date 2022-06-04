@@ -11,6 +11,7 @@ class Squad:
         self.squad_complete = False  # Set to true when number of players equals 11.
 
     def __str__(self):
+        # Printing a Squad instance prints out the names of the players in the squad, split by their positions.
         gk = ', '.join([player for player in self.players["GKP"]])
         defs = ', '.join([player for player in self.players["DEF"]])
         mids = ', '.join([player for player in self.players["MID"]])
@@ -60,6 +61,9 @@ class Squad:
 
 if __name__ == "__main__":
     test_squad = Squad()
+
+    print(test_squad)
+    print("----------")
 
     players = {1: {"name": "Son", "position": "MID", "club": "TOT"},
                2: {"name": "Salah", "position": "MID", "club": "LIV"},
