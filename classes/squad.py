@@ -40,12 +40,12 @@ class Squad:
         print("Squad club count updated.")
         return None
 
-    def check_squad_complete(self):
-        if self.current_squad_size == 11:
-            self.squad_complete = True
-
-        print("Squad complete: {}".format(self.squad_complete))
-        return None
+    # def check_squad_complete(self):
+    #     if self.current_squad_size == 11:
+    #         self.squad_complete = True
+    #
+    #     print("Squad complete: {}".format(self.squad_complete))
+    #     return None
 
     def add_player_to_squad(self, player):
         # Add player into the players dict, under the correct position.
@@ -58,8 +58,8 @@ class Squad:
         # Update the club count.
         self.update_club_count(club)
 
-        # Check for suad completion.
-        self.check_squad_complete()
+        # Check for squad completion.
+        # self.check_squad_complete()
 
         print("Player {} added to squad.".format(name))
         return

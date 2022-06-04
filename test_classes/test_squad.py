@@ -16,26 +16,26 @@ def test_update_club_count():
     assert test_squad.club_count == {"TOT": 2,
                                      "LIV": 1}
 
-def test_check_squad_complete():
-    test_squad = Squad()
-
-    # Check that squad_complete is still False after adding one player.
-    test_squad.current_squad_size = 1
-
-    test_squad.check_squad_complete()
-    assert test_squad.squad_complete is False
-
-    # Check that squad_complete is still False after adding ten players.
-    test_squad.current_squad_size = 10
-
-    test_squad.check_squad_complete()
-    assert test_squad.squad_complete is False
-
-    # Check that squad_complete is True after adding eleven players.
-    test_squad.current_squad_size = 11
-
-    test_squad.check_squad_complete()
-    assert test_squad.squad_complete is True
+# def test_check_squad_complete():
+#     test_squad = Squad()
+#
+#     # Check that squad_complete is still False after adding one player.
+#     test_squad.current_squad_size = 1
+#
+#     test_squad.check_squad_complete()
+#     assert test_squad.squad_complete is False
+#
+#     # Check that squad_complete is still False after adding ten players.
+#     test_squad.current_squad_size = 10
+#
+#     test_squad.check_squad_complete()
+#     assert test_squad.squad_complete is False
+#
+#     # Check that squad_complete is True after adding eleven players.
+#     test_squad.current_squad_size = 11
+#
+#     test_squad.check_squad_complete()
+#     assert test_squad.squad_complete is True
 
 # Create tests for add_player method.
 def test_add_player_to_squad():
