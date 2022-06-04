@@ -63,6 +63,9 @@ def test_add_player_to_squad():
                                   "MID": ["Son"],
                                   "FWD": []}
 
+    # Check current_squad_size is incremented as expected.
+    assert test_squad.current_squad_size == 1
+
     # Check players two through eleven are inserted into the players attribute as expected.
     for p in range(2, 12):
         test_squad.add_player_to_squad(players[p])
@@ -72,3 +75,6 @@ def test_add_player_to_squad():
                                   "MID": ["Son", "Salah", "Diaz", "Gallagher", "Brownhill"],
                                   "FWD": ["Ronaldo"]
                                   }
+
+    # Check current_squad_size is incremented as expected.
+    assert test_squad.current_squad_size == 11
