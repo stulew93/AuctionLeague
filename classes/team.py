@@ -19,7 +19,7 @@ class Team:
         team_str = "Team: " + self.name + "\n" \
                    + "Remaining budget: " + str(self.remaining_budget) + "\n" \
                    + str(self.squad)
-
+        # If team is complete, say so!
         if self.team_complete == True:
             team_str += "\n" + "Team {} complete!".format(self.name)
 

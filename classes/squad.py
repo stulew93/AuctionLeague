@@ -22,12 +22,12 @@ class Squad:
         mids = ', '.join([player for player in self.players["MID"]])
         fwds = ', '.join([player for player in self.players["FWD"]])
 
-        team_str = "Goalkeeper: " + gk + " (" + str(len(self.players["GKP"])) + ")\n" \
+        squad_str = "Goalkeeper: " + gk + " (" + str(len(self.players["GKP"])) + ")\n" \
                    "Defenders: " + defs + " (" + str(len(self.players["DEF"])) + ")\n" \
                    "Midfielders: " + mids + " (" + str(len(self.players["MID"])) + ")\n" \
                    "Forwards: " + fwds + " (" + str(len(self.players["FWD"])) + ")"
 
-        return team_str
+        return squad_str
 
     def update_club_count(self, club):
         # If club already exists in club_count, increment count by 1; else add club into club_count with value 1.
