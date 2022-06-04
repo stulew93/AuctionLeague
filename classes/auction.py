@@ -115,27 +115,34 @@ class Auction:
 
         return eligibility_reason
 
-    def get_teams_eligibility(self, member_id: int) -> Dict:
+    def get_team_eligibility(self, member_id: int, team: Team) -> Dict:
+        formation_eligibility = self.get_formation_eligibility(member_id, team)
+        club_eligibility = self.get_club_eligibility(member_id, team)
 
-        team_eligibility = {}
+        if formation_eligibility != '':
+            eligibility_reason = formation_eligibility
+            eligibility_flag = 0
+        elif club_eligibility != '':
+            eligibility_reason = club_eligibility
+            eligibility_flag = 0
+        else:
+            eligibility_reason = 'Eligible.'
+            eligibility_flag = 1
 
-        for team in self.teams:
-            formation_eligibility = self.get_formation_eligibility(member_id, team)
-            club_eligibility = self.get_club_eligibility(member_id, team)
-            if formation_eligibility != '':
-                eligibility_reason = formation_eligibility
-                eligibility_flag = 0
-            elif club_eligibility != '':
-                eligibility_reason = club_eligibility
-                eligibility_flag = 0
-            else:
-                eligibility_reason = 'Eligible.'
-                eligibility_flag = 1
-
-            team_eligibility[team.name] = {"eligibility_flag": eligibility_flag,
-                                           "eligibility_reason": eligibility_reason}
+        team_eligibility = {"eligibility_flag": eligibility_flag,
+                            "eligibility_reason": eligibility_reason}
 
         return team_eligibility
+
+    def get_teams_eligibility(self, member_id: int) -> Dict:
+
+        teams_eligibility = {}
+
+        for team in self.teams:
+            team_eligibility = self.get_team_eligibility(member_id, team)
+            teams_eligibility[team.name] = team_eligibility
+
+        return teams_eligibility
 
     def nominate_player(self, member_id: int):
         if self.players[member_id]["player_purchased"] == 1:
