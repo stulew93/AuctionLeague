@@ -1,108 +1,39 @@
-from typing import Dict
-
+from classes.squad import Squad
 
 class Team:
+    '''
+    The Team class is a shell for the Squad - set up like this as in future I hope to add configurable elements
+    (such as managers). The Team object will manage the budget for the team, including keeping track of the remaining
+    budget, and whether the team is complete.
+    '''
 
-    def __init__(self, name: str, manager_required: bool = 0):
+    def __init__(self, name, remaining_budget=100, target_squad_size=11):
         self.name = name
-        self.manager_required = manager_required
-        self.budget = 100
+        self.squad = Squad()
+        self.remaining_budget = remaining_budget  # Default 100.
+        self.target_squad_size = target_squad_size  # Default 11.
+        self.team_complete = False
 
-        if manager_required == 1:
-            self.max_spend = 89
-        else:
-            self.max_spend = 90
+    def update_remaining_budget(self, debit):
+        # Subtract the bid from the remaining budget.
+        self.remaining_budget -= debit
+        return
 
-        self.squad_members_current = 0
+    def check_team_complete(self):
+        # Currently the only criteria is that
+        if self.squad.current_squad_size == self.target_squad_size:
+            self.team_complete = True
+        return
 
-        if manager_required == 1:
-            self.squad_members_needed = 12
-            self.final_squad_size = 12
-        else:
-            self.squad_members_needed = 11
-            self.final_squad_size = 11
+    def add_squad_member(self, player, cost):
+        # Add player to squad.
+        self.squad.add_player_to_squad(player)
 
-        if manager_required == 1:
-            self.manager = []
-        self.goalkeeper = []
-        self.defenders = []
-        self.midfielders = []
-        self.forwards = []
+        # Update the team's remaining budget.
+        self.update_remaining_budget(cost)
 
-        self.club_count = {}
+        # Check whether the team is complete.
+        self.check_team_complete()
 
-        self.formation = [len(self.defenders),
-                          len(self.midfielders),
-                          len(self.forwards)]
+        return
 
-    def __str__(self):
-
-        if self.manager_required == 1:
-            mgr = ', '.join([m for m in self.manager])
-            manager_str = "Manager: " + mgr + "\n"
-        else:
-            manager_str = ''
-
-        gk = ', '.join([g["first_name"] + ' ' + g["second_name"] for g in self.goalkeeper])
-        defs = ', '.join([d["first_name"] + ' ' + d["second_name"] for d in self.defenders])
-        mids = ', '.join([m["first_name"] + ' ' + m["second_name"] for m in self.midfielders])
-        fwds = ', '.join([f["first_name"] + ' ' + f["second_name"] for f in self.forwards])
-
-        team_str = "Name: " + self.name + "\n" \
-                   "Budget Remaining: £" + str(self.budget) + "m\n" \
-                   "Squad Completion: " + str(self.squad_members_current) + "/" + str(self.final_squad_size) + "\n" \
-                   "Formation: " + str(self.formation) + "\n" \
-                   + manager_str + \
-                   "Goalkeeper: " + gk + " (" + str(len(self.goalkeeper)) + ")\n" \
-                   "Defenders: " + defs + " (" + str(len(self.defenders)) + ")\n" \
-                   "Midfielders: " + mids + " (" + str(len(self.midfielders)) + ")\n" \
-                   "Forwards: " + fwds + " (" + str(len(self.defenders)) + ")"
-
-        return team_str
-
-    def recalculate_max_spend(self):
-        if self.squad_members_needed == 0:
-            self.max_spend = 0
-        else:
-            self.max_spend = self.budget - (self.squad_members_needed - 1)
-        return None
-
-    def update_formation(self):
-        self.formation = [len(self.defenders),
-                          len(self.midfielders),
-                          len(self.forwards)]
-        return None
-
-    def increment_club_count(self, club: str):
-        if club not in self.club_count:
-            self.club_count[club] = 1
-        else:
-            self.club_count[club] += 1
-        return None
-
-    def add_squad_member(self, member: Dict, price: int):
-
-        position = member["position_short"]
-
-        if position == 'MGR':
-            self.manager.append(member)
-        elif position == 'GKP':
-            self.goalkeeper.append(member)
-        elif position == 'DEF':
-            self.defenders.append(member)
-        elif position == 'MID':
-            self.midfielders.append(member)
-        elif position == 'FWD':
-            self.forwards.append(member)
-        else:
-            return None
-
-        self.squad_members_current += 1
-        self.squad_members_needed -= 1
-        self.budget -= price
-        self.recalculate_max_spend()
-        self.update_formation()
-        self.increment_club_count(member["club_short"])
-
-        print("Player added to squad.")
-        return None
