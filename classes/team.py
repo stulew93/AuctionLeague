@@ -14,9 +14,9 @@ class Team:
         self.target_squad_size = target_squad_size  # Default 11.
         self.team_complete = False
 
-    def update_remaining_budget(self, successful_bid):
-        # If the team has a successful bid for a player, subtract the bid from the remaining budget.
-        self.remaining_budget -= successful_bid
+    def update_remaining_budget(self, debit):
+        # Subtract the bid from the remaining budget.
+        self.remaining_budget -= debit
         return
 
     def check_team_complete(self):
@@ -25,8 +25,15 @@ class Team:
             self.team_complete = True
         return
 
-    def add_squad_member(self, player):
-
+    def add_squad_member(self, player, cost):
+        # Add player to squad.
         self.squad.add_player_to_squad(player)
 
+        # Update the team's remaining budget.
+        self.update_remaining_budget(cost)
+
+        # Check whether the team is complete.
         self.check_team_complete()
+
+        return
+
