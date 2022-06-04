@@ -29,13 +29,30 @@ def test_update_max_bid():
     test_team.update_max_bid()
     assert test_team.max_bid == 1
 
-    # Check that if the suad is complete, max_bid is 0.
+    # Check that if the squad is complete, max_bid is 0.
     test_team.squad.squad_complete = True
     test_team.update_max_bid()
     assert test_team.max_bid == 0
 
 # Create tests for check_team_complete method.
 def test_check_team_complete():
-    pass
+    test_team = Team()
 
-pass
+    # Check that squad_complete is still False after adding one player.
+    test_team.squad.current_squad_size = 1
+
+    test_team.check_team_complete()
+    assert test_team.team_complete is False
+
+    # Check that squad_complete is still False after adding ten players.
+    test_team.squad.current_squad_size = 10
+
+    test_team.check_team_complete()
+    assert test_team.team_complete is False
+
+    # Check that squad_complete is True after adding eleven players.
+    test_team.squad.current_squad_size = 11
+
+    test_team.check_team_complete()
+    assert test_team.team_complete is True
+
