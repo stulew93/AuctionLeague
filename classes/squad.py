@@ -1,8 +1,7 @@
 class Squad:
     '''
     The Squad class represents a group of players who will form the basis of a team. It deals with adding players to
-    the squad player list, keeps track of their positions, records the number of players in the squad from each club,
-    and asserts whether the squad is complete (11 players).
+    the players dict, keeps track of their positions, and records the number of players in the squad from each club.
     '''
 
     def __init__(self):
