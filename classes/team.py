@@ -19,6 +19,10 @@ class Team:
         team_str = "Team: " + self.name + "\n" \
                    + "Remaining budget: " + str(self.remaining_budget) + "\n" \
                    + str(self.squad)
+
+        if self.team_complete == True:
+            team_str += "\n" + "Team {} complete!".format(self.name)
+
         return team_str
 
     def update_remaining_budget(self, debit):
@@ -82,4 +86,14 @@ if __name__ == "__main__":
     print(test_team_1)
     print("----------")
     print(test_team_2)
+    print("----------")
+
+    print("******************************************")
+
+    test_team_3 = Team("Bob")
+    for p in range(1,12):
+        test_team_3.add_squad_member(players[p],3)
+        print("----------")
+
+    print(test_team_3)
     print("----------")
