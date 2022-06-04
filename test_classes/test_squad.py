@@ -20,31 +20,19 @@ def test_check_squad_complete():
     test_squad = Squad()
 
     # Check that squad_complete is still False after adding one player.
-    test_squad.players = {"GKP": [],
-                          "DEF": [],
-                          "MID": ["Son"],
-                          "FWD": []
-                          }
+    test_squad.current_squad_size = 1
 
     test_squad.check_squad_complete()
     assert test_squad.squad_complete is False
 
     # Check that squad_complete is still False after adding ten players.
-    test_squad.players = {"GKP": ["Martinez"],
-                          "DEF": ["Trent", "Targett", "Cancelo", "Sessegnon"],
-                          "MID": ["Son", "Salah", "Diaz", "Gallagher", "Brownhill"],
-                          "FWD": []
-                          }
+    test_squad.current_squad_size = 10
 
     test_squad.check_squad_complete()
     assert test_squad.squad_complete is False
 
     # Check that squad_complete is True after adding eleven players.
-    test_squad.players = {"GKP": ["Martinez"],
-                          "DEF": ["Trent", "Targett", "Cancelo", "Sessegnon"],
-                          "MID": ["Son", "Salah", "Diaz", "Gallagher", "Brownhill"],
-                          "FWD": ["Ronaldo"]
-                          }
+    test_squad.current_squad_size = 11
 
     test_squad.check_squad_complete()
     assert test_squad.squad_complete is True

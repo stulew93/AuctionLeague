@@ -6,6 +6,7 @@ class Squad:
     '''
 
     def __init__(self):
+        self.current_squad_size = 0  # Keeps track of the number of players in the squad.
         self.players = {"GKP": [],
                         "DEF": [],
                         "MID": [],
@@ -40,12 +41,7 @@ class Squad:
         return None
 
     def check_squad_complete(self):
-        # Count the players in the squad; if there are 11 then set squad_complete to True.
-        player_count = 0
-        for pos in self.players:
-            player_count += len(self.players[pos])
-
-        if player_count == 11:
+        if self.current_squad_size == 11:
             self.squad_complete = True
 
         print("Squad complete: {}".format(self.squad_complete))
@@ -56,8 +52,13 @@ class Squad:
         name, position, club = player["name"], player["position"], player["club"]
         self.players[position].append(name)
 
+        # Increment the squad size.
+        self.current_squad_size += 1
+
+        # Update the club count.
         self.update_club_count(club)
 
+        # Check for suad completion.
         self.check_squad_complete()
 
         print("Player {} added to squad.".format(name))
