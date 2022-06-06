@@ -1,4 +1,6 @@
 import requests
+from unidecode import unidecode
+from classes.team import Team
 
 class Auction:
     '''
@@ -18,12 +20,14 @@ class Auction:
         self.get_player_info_from_api()
 
     def get_position(self, positions_list, id):
-        # Takes the positions raw data and returns the position related to the input id.
+        # Used in get_player_info_from_api.
+        # Takes the positions raw data from the api call and returns the position related to the input id.
         simple_positions = {position["id"]: position["singular_name_short"] for position in positions_list}
         return simple_positions[id]
 
     def get_club(self, clubs_list, id):
-        # Takes the clubs raw data and returns the club name related to the input id.
+        # Used in get_player_info_from_api.
+        # Takes the clubs raw data from the api call and returns the club name related to the input id.
         simple_clubs = {club["id"]: club["short_name"] for club in clubs_list}
         return simple_clubs[id]
 
@@ -45,7 +49,9 @@ class Auction:
 
         # For each player, format the data points we want and add to the players class attribute.
         for player in raw_players:
-            player_formatted = {"simple_name": player["web_name"],
+            player_formatted = {"simple_name_raw": player["web_name"],
+                                "simple_name_eng_chars": unidecode(player["web_name"]), # using unidecode to anglicise
+                                # name for easier searching
                                 "first_name": player["first_name"],
                                 "second_name": player["second_name"],
                                 "club": self.get_club(raw_clubs, player["team"]),
@@ -56,10 +62,45 @@ class Auction:
             self.players[player["id"]] = player_formatted
 
         print("Player data loaded.")
+        return
+
+    def add_team(self, team_name):
+        # Add new team to the teams list.
+        # Check that the new team name is unique before adding.
+        if team_name in [team.name for team in self.teams]:
+            print(f'Th team name "{team_name}" is already taken.')
+            return
+        else:
+            new_team = Team(team_name)
+            self.teams.append(new_team)
+            print(f"Team {team_name} added successfully.")
+            return
+
+    def print_teams(self):
+        # Method to print the team names out neatly.
+        teams_display = "Teams: "
+        for team in self.teams:
+            teams_display += team.name + ", "
+        teams_display = teams_display[:-2]
+        print(teams_display)
+        return
 
 
 if __name__ == "__main__":
     test_auction = Auction()
     # test_auction.get_player_info_from_api()
-    print(test_auction.players[1])
-    pass
+    # print(test_auction.players[1])
+    # print(test_auction.players)
+
+    # for player in test_auction.players:
+    #     print(player, ":", test_auction.players[player])
+
+    test_auction.add_team("Stuart")
+    test_auction.add_team("Alex")
+    test_auction.add_team("Stuart")
+
+    for team in test_auction.teams:
+        print(team)
+        print("----------")
+
+    test_auction.show_teams()
