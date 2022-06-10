@@ -2,8 +2,6 @@ import requests
 from unidecode import unidecode
 from classes.team import Team
 
-# TODO: delete_team method.
-
 class Auction:
     '''
     The Auction class orchestrates an auction. It maintains a list of participating Teams, a list of players available
@@ -70,13 +68,27 @@ class Auction:
         # Add new team to the teams list.
         # Check that the new team name is unique before adding.
         if team_name in [team.name for team in self.teams]:
-            print(f'Th team name "{team_name}" is already taken.')
+            print(f'The team name "{team_name}" is already taken.')
             return
         else:
             new_team = Team(team_name)
             self.teams.append(new_team)
             print(f"Team {team_name} added successfully.")
             return
+
+    def delete_team(self, team_name):
+        # TODO: Ensure to return any players associated with the team back to the available pool.
+        # Delete team from teams list.
+        # Check that team exists before deleting.
+        if team_name not in [team.name for team in self.teams]:
+            print(f'Team "{team_name}" does not exist.')
+            return
+        else:
+            team_to_delete = next(team for team in self.teams if team.name == team_name)
+            self.teams.remove(team_to_delete)
+            print(f"Team {team_name} deleted successfully.")
+            return
+
 
     def print_teams(self):
         # Method to print the team names out neatly.
@@ -100,9 +112,11 @@ if __name__ == "__main__":
     test_auction.add_team("Stuart")
     test_auction.add_team("Alex")
     test_auction.add_team("Stuart")
+    test_auction.delete_team("Alex")
+    test_auction.delete_team("Alex")
 
     for team in test_auction.teams:
         print(team)
         print("----------")
 
-    test_auction.show_teams()
+    test_auction.print_teams()
