@@ -7,11 +7,13 @@ class Team:
     budget, and whether the team is complete.
     '''
 
-    def __init__(self, name, remaining_budget=100, target_squad_size=11):
+    def __init__(self, name, remaining_budget=100, target_team_size=11):
         self.name = name
         self.squad = Squad()
         self.remaining_budget = remaining_budget  # Default 100.
-        self.target_squad_size = target_squad_size  # Default 11.
+        self.max_bid = remaining_budget - target_team_size + 1
+        self.current_team_size = self.squad.current_squad_size
+        self.target_team_size = target_team_size  # Default 11.
         self.team_complete = False
 
     def __str__(self):
@@ -30,11 +32,24 @@ class Team:
         self.remaining_budget -= debit
         return
 
-    def check_team_complete(self):
+    def update_max_bid(self):
+        if self.team_complete:
+            self.max_bid = 0
+        else:
+            self.max_bid = self.remaining_budget - (self.target_team_size - self.current_team_size) + 1
+        return
+
+    def update_team_complete(self):
         # Currently the only criteria is that
-        if self.squad.current_squad_size == self.target_squad_size:
+        if self.current_team_size == self.target_team_size:
             self.team_complete = True
         return
+
+    def get_team_completion(self):
+        if self.team_complete == True:
+            return "Complete!"
+        else:
+            return f"{self.current_team_size}/{self.target_team_size}"
 
     def add_squad_member(self, player, cost):
         # Add player to squad.
@@ -43,8 +58,11 @@ class Team:
         # Update the team's remaining budget.
         self.update_remaining_budget(cost)
 
-        # Check whether the team is complete.
-        self.check_team_complete()
+        # Update the team's max bid.
+        self.update_max_bid()
+
+        # Update team completion.
+        self.update_team_complete()
 
         print("Squad member added to team {}.".format(self.name))
         return
