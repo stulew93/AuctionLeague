@@ -8,13 +8,15 @@ def display_teams():
     for i in range(num_teams):
         # Display team name.
         team_name = auction.teams[i].name
-        # row=i+1 as start adding these to the grid in frame_teams_info after the subtitle "Teams:".
+        # row=i+1 as start adding these to the grid in frame_teams_info after the column headings (row 0).
         label_team_name = tk.Label(frame_teams_info, text=team_name, font="none 10")
         label_team_name.grid(row=i+1, column=0, sticky='w', padx=FRAME_TEAM_X_PAD)
+
         # Display team completion.
         team_completion = auction.teams[i].get_team_completion()
         label_team_completion = tk.Label(frame_teams_info, text=team_completion, font="none 10")
         label_team_completion.grid(row=i+1, column=1, sticky='ew', padx=FRAME_TEAM_X_PAD)
+
         # Display budget info.
         # In the form "(Remaining budget) / (Max single bid)"
         remaining_budget = auction.teams[i].remaining_budget
@@ -22,6 +24,7 @@ def display_teams():
         team_budget_info = f"£{remaining_budget}m / £{max_bid}m"
         label_team_budget_info = tk.Label(frame_teams_info, text=team_budget_info, font="none 10")
         label_team_budget_info.grid(row=i+1, column=2, sticky='ew', padx=FRAME_TEAM_X_PAD)
+
         # Create "View" button.
         button_view = tk.Button(frame_teams_info, text='VIEW')
         button_view.grid(row=i+1, column=3, sticky='w', padx=FRAME_TEAM_X_PAD, pady=2)
