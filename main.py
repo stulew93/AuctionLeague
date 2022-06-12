@@ -2,6 +2,7 @@ import tkinter as tk
 from classes.auction import Auction
 from classes.frame_title import TitleFrame
 from classes.frame_team_display import TeamDisplay
+from classes.frame_auction_lot import AuctionLot
 
 HEIGHT = 600
 WIDTH = 800
@@ -23,16 +24,15 @@ frame_title.place(relwidth=1, relheight=0.05)
 
 # Team section; the left hand column in the main display.
 frame_teams = TeamDisplay(window, auction)
-frame_teams.place(rely=0.05, relwidth=0.33, relheight=0.95)
-
+frame_teams.place(rely=0.05, relwidth=0.25, relheight=0.95)
 
 # frame for selecting player to auction.
-frame_auction = tk.Frame(window, bg='green')
-frame_auction.place(relx=0.33, rely=0.05, relwidth=0.34, relheight=0.95)
+frame_auction = AuctionLot(window, auction)
+frame_auction.place(relx=0.25, rely=0.05, relwidth=0.5, relheight=0.95)
 
 # frame for displaying past purchases.
-frame_history = tk.Frame(window, bg='black')
-frame_history.place(relx=0.67, rely=0.05, relwidth=0.33, relheight=0.95)
+frame_history = tk.Frame(window, bg='blue')
+frame_history.place(relx=0.75, rely=0.05, relwidth=0.25, relheight=0.95)
 
 # Run mainloop.
 window.mainloop()
