@@ -1,7 +1,7 @@
 import tkinter as tk
 from classes.auction import Auction
-from classes.title_frame import TitleFrame
-from classes.team_display_frame import TeamDisplay
+from classes.frame_title import TitleFrame
+from classes.frame_team_display import TeamDisplay
 
 HEIGHT = 600
 WIDTH = 800
