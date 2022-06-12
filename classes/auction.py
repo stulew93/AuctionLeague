@@ -2,6 +2,8 @@ import requests
 from unidecode import unidecode
 from classes.team import Team
 
+# TODO: method to change the name of a team.
+
 class Auction:
     '''
     The Auction class orchestrates an auction. It maintains a list of participating Teams, a list of players available
