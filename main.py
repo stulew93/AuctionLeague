@@ -30,7 +30,6 @@ def display_teams():
         button_view.grid(row=i+1, column=3, sticky='w', padx=FRAME_TEAM_X_PAD, pady=2)
     return
 
-#
 def create_team():
     # TODO: Pop up message if name is taken or is invalid (e.g. blank entry box).
     new_team_name = entry_team_name.get()
