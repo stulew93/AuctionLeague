@@ -14,6 +14,7 @@ class Auction:
     def __init__(self):
         self.teams = []  # A list of participating teams.
         self.players = {}  # The players available for auction. Each player is keyed on their ID, paired with an info dict.
+        self.clubs = {}  # The clubs that players can play for.
         self.transaction_log = []  # A list of all transactions throughout the auction.
         self.auction_complete = False
 
@@ -27,11 +28,10 @@ class Auction:
         simple_positions = {position["id"]: position["singular_name_short"] for position in positions_list}
         return simple_positions[id]
 
-    def get_club(self, clubs_list, id):
-        # Used in get_player_info_from_api.
-        # Takes the clubs raw data from the api call and returns the club name related to the input id.
-        simple_clubs = {club["id"]: club["short_name"] for club in clubs_list}
-        return simple_clubs[id]
+    def get_clubs(self, clubs_data):
+        # Saves the club data into a simplified dictionary.
+        self.clubs = {club["id"]: club["short_name"] for club in clubs_data}
+        return
 
     def get_player_info_from_api(self):
         '''
@@ -44,8 +44,9 @@ class Auction:
         fpl_data = req.json()
         # Extract raw player data, from key "elements".
         raw_players = fpl_data["elements"]
-        # Extract raw club data, from key "teams".
+        # Extract raw club data, from key "teams"; save in the clubs dictionary.
         raw_clubs = fpl_data["teams"]
+        self.get_clubs(raw_clubs)
         # Extract raw position data, from key "element_types".
         raw_positions = fpl_data["element_types"]
 
@@ -56,7 +57,7 @@ class Auction:
                                 # name for easier searching
                                 "first_name": player["first_name"],
                                 "second_name": player["second_name"],
-                                "club": self.get_club(raw_clubs, player["team"]),
+                                "club": self.clubs[player["team"]],
                                 "position": self.get_position(raw_positions, player["element_type"]),
                                 "player_purchased": False
                                 }
@@ -122,3 +123,5 @@ if __name__ == "__main__":
         print("----------")
 
     test_auction.print_teams()
+
+    print(test_auction.clubs)

@@ -6,7 +6,8 @@ def test_get_player_info_from_api():
     # Look at player ID 1 for tests.
     test_player = test_auction.players[1]
     print(test_player)
-    assert "simple_name" in test_player.keys()
+    assert "simple_name_raw" in test_player.keys()
+    assert "simple_name_eng_chars" in test_player.keys()
     assert "first_name" in test_player
     assert "second_name" in test_player
     assert "club" in test_player
