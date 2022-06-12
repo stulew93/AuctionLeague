@@ -3,7 +3,7 @@ from classes.auction import Auction
 
 class TitleFrame(tk.Frame):
     def __init__(self, parent):
-        tk.Frame.__init__(self)
+        tk.Frame.__init__(self, parent)
 
         # create title label:
         self.label_title = tk.Label(self, text="Auction League", font="none 16 bold")

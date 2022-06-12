@@ -4,7 +4,6 @@ from classes.auction import Auction
 class TeamDisplay(tk.Frame):
     def __init__(self, parent, auction):
         tk.Frame.__init__(self, parent)
-        self.parent = parent
         self.auction = auction
 
         self.FRAME_TEAM_X_PAD = 10
