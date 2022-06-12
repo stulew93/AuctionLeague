@@ -30,7 +30,7 @@ def display_teams():
         button_view.grid(row=i+1, column=3, sticky='w', padx=FRAME_TEAM_X_PAD, pady=2)
     return
 
-
+#
 def create_team():
     # TODO: Pop up message if name is taken or is invalid (e.g. blank entry box).
     new_team_name = entry_team_name.get()
@@ -42,7 +42,7 @@ def create_team():
 def delete_team():
     team_to_delete = entry_team_name.get()
     auction.delete_team(team_to_delete)
-    for label in frame_teams_info.grid_slaves(column=0):
+    for label in frame_teams_info.grid_slaves():
         if int(label.grid_info()["row"]) > 0:
             label.grid_forget()
     display_teams()
@@ -105,7 +105,7 @@ frame_teams_info.columnconfigure((1, 2), weight=2)
 frame_teams_info.columnconfigure(3, weight=1)
 
 # Create column headings for list of teams.
-# Specify desired headings:
+# Specify desired headings and sticky values:
 headings = [("Teams:", 'w'),
             ("Completion:", 'ew'),
              ("Budget/MaxBid:", 'ew')]
@@ -114,15 +114,6 @@ for i in range(len(headings)):
     label_heading = tk.Label(frame_teams_info, text=headings[i][0], font="none 10 bold")
     label_heading.grid(row=0, column=i, sticky=headings[i][1], padx=FRAME_TEAM_X_PAD, pady=2)
 
-# "Teams:"
-# label_heading_teams = tk.Label(frame_teams_info, text="Teams:", font="none 10 bold")
-# label_heading_teams.grid(row=0, column=0, sticky='w', padx=FRAME_TEAM_X_PAD, pady=2)
-
-# Display team completion.
-
-# Diplay remaining budget/max bid.
-
-# Add button to view team.
 
 
 # frame for selecting player to auction.
