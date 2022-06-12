@@ -34,9 +34,9 @@ class Team:
 
     def update_max_bid(self):
         if self.team_complete:
-            max_bid = 0
+            self.max_bid = 0
         else:
-            self.max_bid = remaining_budget - target_team_size + 1
+            self.max_bid = self.remaining_budget - (self.target_team_size - self.current_team_size) + 1
         return
 
     def update_team_complete(self):
