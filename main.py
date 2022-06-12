@@ -1,5 +1,6 @@
 import tkinter as tk
 from classes.auction import Auction
+from classes.title_frame import TitleFrame
 from classes.team_display_frame import TeamDisplay
 
 HEIGHT = 600
@@ -17,13 +18,8 @@ canvas = tk.Canvas(window, height=HEIGHT, width=WIDTH)
 canvas.pack()
 
 # frame for window title.
-frame_title = tk.Frame(window)
+frame_title = TitleFrame(window)
 frame_title.place(relwidth=1, relheight=0.05)
-
-# create title label:
-label_title = tk.Label(frame_title, text="Auction League", font="none 16 bold")
-label_title.place(relx=0.5, rely=0.5, anchor='center')
-
 
 # Team section; the left hand column in the main display.
 frame_teams = TeamDisplay(window, auction)
