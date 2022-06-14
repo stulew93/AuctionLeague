@@ -24,15 +24,15 @@ frame_title.place(relwidth=1, relheight=0.05)
 
 # Team section; the left hand column in the main display.
 frame_teams = TeamDisplay(window, auction)
-frame_teams.place(rely=0.05, relwidth=0.25, relheight=0.95)
+frame_teams.place(rely=0.05, relwidth=0.30, relheight=0.95)
 
 # frame for selecting player to auction.
 frame_auction = AuctionLot(window, auction)
-frame_auction.place(relx=0.25, rely=0.05, relwidth=0.5, relheight=0.95)
+frame_auction.place(relx=0.32, rely=0.05, relwidth=0.46, relheight=0.95)
 
 # frame for displaying past purchases.
 frame_history = tk.Frame(window, bg='blue')
-frame_history.place(relx=0.75, rely=0.05, relwidth=0.25, relheight=0.95)
+frame_history.place(relx=0.8, rely=0.05, relwidth=0.2, relheight=0.95)
 
 # Run mainloop.
 window.mainloop()

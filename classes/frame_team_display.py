@@ -33,7 +33,7 @@ class TeamDisplay(tk.Frame):
         # Frame for team information.
         self.frame_teams_info = tk.Frame(self)
         self.frame_teams_info.place(rely=0.15, relwidth=1, relheight=0.85)
-        self.frame_teams_info.columnconfigure(0, weight=3)
+        self.frame_teams_info.columnconfigure(0, weight=4)
         self.frame_teams_info.columnconfigure((1, 2), weight=2)
         self.frame_teams_info.columnconfigure(3, weight=1)
 
