@@ -52,7 +52,8 @@ class Auction:
 
         # For each player, format the data points we want and add to the players class attribute.
         for player in raw_players:
-            player_formatted = {"simple_name_raw": player["web_name"],
+            player_formatted = {"code": player["code"],
+                                "simple_name_raw": player["web_name"],
                                 "simple_name_eng_chars": unidecode(player["web_name"]), # using unidecode to anglicise
                                 # name for easier searching
                                 "first_name": player["first_name"],

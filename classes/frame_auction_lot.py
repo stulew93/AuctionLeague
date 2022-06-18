@@ -1,0 +1,95 @@
+import PIL
+import requests
+import tkinter as tk
+from tkinter import ttk
+from PIL import ImageTk, Image
+from classes.auction import Auction
+
+class AuctionLot(tk.Frame):
+
+    def __init__(self, parent, auction):
+        tk.Frame.__init__(self, parent)
+        self.auction = auction
+
+        # Variable to control padding across all widgets.
+        self.FRAME_AUCTION_LOT_X_PAD = 10
+
+        # Create frame for player selection.
+        self.frame_player_selection = tk.Frame(self)
+        self.frame_player_selection.place(relwidth=1, relheight=0.15)
+        self.columnconfigure((0, 1), weight=1)
+
+        # Create label for heading "Select player below:"
+        label_select_player = tk.Label(self.frame_player_selection, text="Player for auction:", font="none 10 bold")
+        label_select_player.grid(row=0, column=0, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
+        # Create label for heading "Filter by club:"
+        label_club_filter = tk.Label(self.frame_player_selection, text="Filter by club:", font="none 10 bold")
+        label_club_filter.grid(row=0, column=1, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
+        # Create a combobox to select a player.
+        # self.player_list = [self.auction.players[player]['simple_name_eng_chars'] for player in self.auction.players]
+        self.player_list = [f"({self.auction.players[player]['club']}) " \
+                             f"{self.auction.players[player]['simple_name_eng_chars']}"
+                             for player in self.auction.players]
+        self.combobox_players = ttk.Combobox(self.frame_player_selection, values=sorted(self.player_list), width=40)
+        self.combobox_players.set("Select player from dropdown:")
+        self.combobox_players.grid(row=1, column=0, sticky='ew', padx=self.FRAME_AUCTION_LOT_X_PAD)
+        self.combobox_players.bind("<<ComboboxSelected>>", self.display_player_image)
+
+        # Create combobox to select a club as a filter.
+        self.club_list = [self.auction.clubs[club] for club in self.auction.clubs]
+        self.combobox_clubs = ttk.Combobox(self.frame_player_selection, values=self.club_list, width=10)
+        self.combobox_clubs.set("Select club:")
+        self.combobox_clubs.grid(row=1, column=1, sticky='ew', padx=self.FRAME_AUCTION_LOT_X_PAD)
+        self.combobox_clubs.bind("<<ComboboxSelected>>", self.filter_players_by_club)
+
+        # Create frame to display player image.
+        self.frame_player_image = tk.Frame(self)
+        self.frame_player_image.place(rely=0.15, relwidth=0.35, relheight=0.4)
+
+        # Create canvas for image
+        self.canvas = tk.Canvas(self.frame_player_image)
+        self.canvas.place(relwidth=1, relheight=1)
+
+
+    def filter_players_by_club(self, event):
+        club = self.combobox_clubs.get()
+        filtered_player_list = [self.auction.players[player]['simple_name_eng_chars'] for player in self.auction.players
+                                if self.auction.players[player]['club'] == club]
+        self.combobox_players["values"] = sorted(filtered_player_list)
+        print(f"Filtered players of {club}.")
+        return
+
+    def display_player_image(self, event):
+        player_name = self.combobox_players.get()
+        if player_name[0] == '(':  # if player has club in brackets in front of the name
+            player_name = player_name[6:]  # drop the first six characters.
+        player_code = [player["code"] for player in self.auction.players.values()
+                       if player["simple_name_eng_chars"] == player_name
+                       ][0]
+        image_loc = f"C:/Users/stuar/Documents/PythonFiles/AuctionLeaguev2/adhoc_testing/player_images/{player_code}.png"
+
+        # root_image_url = "https://resources.premierleague.com/premierleague/photos/players/110x140/p{}.png"
+        # image_url = root_image_url.format(player_code)
+        # # print(image_url)
+        # image_req = requests.get(image_url)
+        try:
+            img = Image.open(image_loc)
+        except PIL.UnidentifiedImageError:
+            image_loc = "question_mark.png"
+            img = Image.open(image_loc)
+        self.canvas.image = ImageTk.PhotoImage(img)
+        # self.canvas.image = ImageTk.PhotoImage(image_req.content)
+        self.canvas.create_image(0, 0, image=self.canvas.image, anchor='nw')
+        # image_label = tk.Label(self.frame_player_image, image=player_image)
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    auction = Auction()
+    frame_auction_lot = AuctionLot(root, auction)
+    frame_auction_lot.pack(side='top', fill='both', expand=True)
+    root.mainloop()
+
+    # frame_auction_lot.display_player_image()
