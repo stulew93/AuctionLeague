@@ -1,3 +1,5 @@
+import PIL
+import requests
 import tkinter as tk
 from tkinter import ttk
 from PIL import ImageTk, Image
@@ -13,7 +15,7 @@ class AuctionLot(tk.Frame):
         self.FRAME_AUCTION_LOT_X_PAD = 10
 
         # Create frame for player selection.
-        self.frame_player_selection = tk.Frame(self, bg='green')
+        self.frame_player_selection = tk.Frame(self)
         self.frame_player_selection.place(relwidth=1, relheight=0.15)
         self.columnconfigure((0, 1), weight=1)
 
@@ -43,11 +45,11 @@ class AuctionLot(tk.Frame):
         self.combobox_clubs.bind("<<ComboboxSelected>>", self.filter_players_by_club)
 
         # Create frame to display player image.
-        self.frame_player_image = tk.Frame(self, bg='red')
+        self.frame_player_image = tk.Frame(self)
         self.frame_player_image.place(rely=0.15, relwidth=0.35, relheight=0.4)
 
         # Create canvas for image
-        self.canvas = tk.Canvas(self.frame_player_image, bg='red')
+        self.canvas = tk.Canvas(self.frame_player_image)
         self.canvas.place(relwidth=1, relheight=1)
 
 
@@ -60,17 +62,26 @@ class AuctionLot(tk.Frame):
         return
 
     def display_player_image(self, event):
-        # TODO: Check that image exists! Add default image for thsoe that don't exist?
+        # TODO: Check that image exists! Add default image for those that don't exist?
         player_name = self.combobox_players.get()
         if player_name[0] == '(':  # if player has club in brackets in front of the name
             player_name = player_name[6:]  # drop the first six characters.
         player_code = [player["code"] for player in self.auction.players.values()
                        if player["simple_name_eng_chars"] == player_name
                        ][0]
-        image_loc = f"../adhoc_testing/player_images/{player_code}.png"
+        image_loc = f"C:/Users/stuar/Documents/PythonFiles/AuctionLeaguev2/adhoc_testing/player_images/{player_code}.png"
 
-        img = Image.open(image_loc)
+        # root_image_url = "https://resources.premierleague.com/premierleague/photos/players/110x140/p{}.png"
+        # image_url = root_image_url.format(player_code)
+        # # print(image_url)
+        # image_req = requests.get(image_url)
+        try:
+            img = Image.open(image_loc)
+        except PIL.UnidentifiedImageError:
+            image_loc = "question_mark.png"
+            img = Image.open(image_loc)
         self.canvas.image = ImageTk.PhotoImage(img)
+        # self.canvas.image = ImageTk.PhotoImage(image_req.content)
         self.canvas.create_image(0, 0, image=self.canvas.image, anchor='nw')
         # image_label = tk.Label(self.frame_player_image, image=player_image)
 
