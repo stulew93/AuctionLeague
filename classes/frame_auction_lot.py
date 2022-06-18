@@ -62,7 +62,6 @@ class AuctionLot(tk.Frame):
         return
 
     def display_player_image(self, event):
-        # TODO: Check that image exists! Add default image for those that don't exist?
         player_name = self.combobox_players.get()
         if player_name[0] == '(':  # if player has club in brackets in front of the name
             player_name = player_name[6:]  # drop the first six characters.
