@@ -52,6 +52,10 @@ class AuctionLot(tk.Frame):
         self.canvas = tk.Canvas(self.frame_player_image)
         self.canvas.place(relwidth=1, relheight=1)
 
+        # Create frame to display player info.
+        self.frame_player_info = tk.Frame(self, bg='red')
+        self.frame_player_info.place(relx=0.35, rely=0.15, relwidth=0.4, relheight=0.4)
+
 
     def filter_players_by_club(self, event):
         club = self.combobox_clubs.get()
@@ -68,16 +72,23 @@ class AuctionLot(tk.Frame):
         player_code = [player["code"] for player in self.auction.players.values()
                        if player["simple_name_eng_chars"] == player_name
                        ][0]
-        image_loc = f"C:/Users/stuar/Documents/PythonFiles/AuctionLeaguev2/adhoc_testing/player_images/{player_code}.png"
+        image_loc = f"C:/Users/stuar/Documents/PythonFiles/AuctionLeaguev2/images_repo/player_images/{player_code}.png"
 
         # root_image_url = "https://resources.premierleague.com/premierleague/photos/players/110x140/p{}.png"
         # image_url = root_image_url.format(player_code)
         # # print(image_url)
         # image_req = requests.get(image_url)
         try:
+            if __name__ == "__main__":
+                image_loc = f"../images_repo/player_images/{player_code}.png"
+            else:
+                image_loc = f"images_repo/player_images/{player_code}.png"
             img = Image.open(image_loc)
-        except PIL.UnidentifiedImageError:
-            image_loc = "images_repo/question_mark.png"
+        except (FileNotFoundError, PIL.UnidentifiedImageError):
+            if __name__ == "__main__":
+                image_loc = "../images_repo/question_mark.png"
+            else:
+                image_loc = "images_repo/question_mark.png"
             img = Image.open(image_loc)
         self.canvas.image = ImageTk.PhotoImage(img)
         # self.canvas.image = ImageTk.PhotoImage(image_req.content)
