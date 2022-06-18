@@ -77,7 +77,7 @@ class AuctionLot(tk.Frame):
         try:
             img = Image.open(image_loc)
         except PIL.UnidentifiedImageError:
-            image_loc = "question_mark.png"
+            image_loc = "images_repo/question_mark.png"
             img = Image.open(image_loc)
         self.canvas.image = ImageTk.PhotoImage(img)
         # self.canvas.image = ImageTk.PhotoImage(image_req.content)
