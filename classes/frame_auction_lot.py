@@ -58,13 +58,11 @@ class AuctionLot(tk.Frame):
         self.frame_player_info.place(relx=0.35, rely=0.15, relwidth=0.4, relheight=0.4)
 
         # Create label for player info.
-        info_text = "Text that will describe the player"
-        # TODO: function to update player text when player is selected.
-        self.label_player_info = tk.Label(self.frame_player_info, text=info_text, font="none 10 bold", justify=tk.LEFT)
+        self.label_player_info = tk.Label(self.frame_player_info, font="none 10 bold", justify=tk.LEFT)
         self.label_player_info.grid(row=0, column=0, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
 
         # Create frame for team selection and winning bid.
-        self.frame_winning_team = tk.Frame(self, bg='green')
+        self.frame_winning_team = tk.Frame(self)
         self.frame_winning_team.place(rely=0.6, relwidth=1, relheight=0.4)
 
         # Create label for heading "Select winning team:"
@@ -155,9 +153,9 @@ class AuctionLot(tk.Frame):
 
     def reset_auction_lot(self):
         self.update_players_list()
-        self.combobox_players.delete(0, tk.END)
-        self.combobox_clubs.delete(0, tk.END)
-        self.combobox_teams.delete(0, tk.END)
+        self.combobox_players.set("Select player from dropdown:")
+        self.combobox_players.set("Select club:")
+        self.combobox_players.set("Select winning team:")
         self.entry_winning_bid.delete(0, tk.END)
         self.canvas.image = None
         self.label_player_info['text'] = ""
