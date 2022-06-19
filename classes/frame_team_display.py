@@ -76,7 +76,7 @@ class TeamDisplay(tk.Frame):
         # Cast team to string to get squad displayed nicely.
         team_info = str(self.auction.teams[team])
         # Label to hold the team info.
-        label_team = tk.Label(canvas_team, text=team_info, font='none 10', anchor='w', justify=tk.LEFT)
+        label_team = tk.Label(canvas_team, text=team_info, font='none 12', anchor='w', justify=tk.LEFT)
         label_team.pack(side=tk.LEFT)
         view_window.mainloop()
         return
