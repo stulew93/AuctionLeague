@@ -56,6 +56,12 @@ class AuctionLot(tk.Frame):
         self.frame_player_info = tk.Frame(self, bg='red')
         self.frame_player_info.place(relx=0.35, rely=0.15, relwidth=0.4, relheight=0.4)
 
+        # Create label for player info.
+        info_text = "Text that will describe the player"
+        # TODO: function to update player text when player is selected.
+        label_player_info = tk.Label(self.frame_player_info, text=info_text, font="none 10 bold")
+        label_player_info.grid(row=0, column=0, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
 
     def filter_players_by_club(self, event):
         club = self.combobox_clubs.get()
