@@ -53,7 +53,7 @@ class AuctionLot(tk.Frame):
         self.canvas.place(relwidth=1, relheight=1)
 
         # Create frame to display player info.
-        self.frame_player_info = tk.Frame(self, bg='red')
+        self.frame_player_info = tk.Frame(self)
         self.frame_player_info.place(relx=0.35, rely=0.15, relwidth=0.4, relheight=0.4)
 
         # Create label for player info.
@@ -66,12 +66,24 @@ class AuctionLot(tk.Frame):
         self.frame_winning_team = tk.Frame(self, bg='green')
         self.frame_winning_team.place(rely=0.6, relwidth=1, relheight=0.4)
 
+        # Create label for heading "Select winning team:"
+        label_select_winning_team = tk.Label(self.frame_winning_team, text="Winning team:", font="none 10 bold")
+        label_select_winning_team.grid(row=0, column=0, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
+        # Create label for heading "Enter winning bid:"
+        label_winning_bid = tk.Label(self.frame_winning_team, text="Enter winning bid:", font="none 10 bold")
+        label_winning_bid.grid(row=0, column=1, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
         # Create combobox to select Team.
         self.teams_list = [self.team.name for team in self.auction.teams]
         self.combobox_teams = ttk.Combobox(self.frame_winning_team, values=self.teams_list, width=25)
         self.combobox_teams.set("Select winning team:")
         self.combobox_teams.bind("<Button>", self.update_teams_list_for_combobox)
-        self.combobox_teams.grid(row=0, column=0, sticky='ew', padx=self.FRAME_AUCTION_LOT_X_PAD)
+        self.combobox_teams.grid(row=1, column=0, sticky='ew', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
+        # Create entry box to enter winning bid.
+        self.entry_winning_bid = tk.Entry(self.frame_winning_team, bg='white')
+        self.entry_winning_bid.grid(row=1, column=1, sticky='ew', padx=self.FRAME_AUCTION_LOT_X_PAD)
 
 
     def update_teams_list_for_combobox(self, event):
