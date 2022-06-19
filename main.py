@@ -27,7 +27,7 @@ frame_teams = TeamDisplay(window, auction)
 frame_teams.place(rely=0.05, relwidth=0.30, relheight=0.95)
 
 # frame for selecting player to auction.
-frame_auction = AuctionLot(window, auction)
+frame_auction = AuctionLot(window, auction, frame_teams)
 frame_auction.place(relx=0.32, rely=0.05, relwidth=0.46, relheight=0.95)
 
 # frame for displaying past purchases.

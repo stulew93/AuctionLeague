@@ -17,10 +17,10 @@ class Squad:
 
     def __str__(self):
         # Printing a Squad instance prints out the names of the players in the squad, split by their positions.
-        gk = ', '.join([player for player in self.players["GKP"]])
-        defs = ', '.join([player for player in self.players["DEF"]])
-        mids = ', '.join([player for player in self.players["MID"]])
-        fwds = ', '.join([player for player in self.players["FWD"]])
+        gk = '; '.join([player for player in self.players["GKP"]])
+        defs = '; '.join([player for player in self.players["DEF"]])
+        mids = '; '.join([player for player in self.players["MID"]])
+        fwds = '; '.join([player for player in self.players["FWD"]])
 
         squad_str = "Goalkeeper: " + gk + " (" + str(len(self.players["GKP"])) + ")\n" \
                    "Defenders: " + defs + " (" + str(len(self.players["DEF"])) + ")\n" \
@@ -48,8 +48,8 @@ class Squad:
 
     def add_player_to_squad(self, player):
         # Add player into the players dict, under the correct position.
-        name, position, club = player["name"], player["position"], player["club"]
-        self.players[position].append(name)
+        name, position, club = player["simple_name_raw"], player["position"], player["club"]
+        self.players[position].append(name + ", " + club)
 
         # Increment the squad size.
         self.current_squad_size += 1
@@ -70,17 +70,17 @@ if __name__ == "__main__":
     print(test_squad)
     print("----------")
 
-    players = {1: {"name": "Son", "position": "MID", "club": "TOT"},
-               2: {"name": "Salah", "position": "MID", "club": "LIV"},
-               3: {"name": "Ronaldo", "position": "FWD", "club": "MUN"},
-               4: {"name": "Trent", "position": "DEF", "club": "LIV"},
-               5: {"name": "Martinez", "position": "GKP", "club": "AVL"},
-               6: {"name": "Targett", "position": "DEF", "club": "NEW"},
-               7: {"name": "Cancelo", "position": "DEF", "club": "MCI"},
-               8: {"name": "Sessegnon", "position": "DEF", "club": "TOT"},
-               9: {"name": "Diaz", "position": "MID", "club": "LIV"},
-               10: {"name": "Gallagher", "position": "MID", "club": "CRY"},
-               11: {"name": "Brownhill", "position": "MID", "club": "BUR"},
+    players = {1: {"simple_name_raw": "Son", "position": "MID", "club": "TOT"},
+               2: {"simple_name_raw": "Salah", "position": "MID", "club": "LIV"},
+               3: {"simple_name_raw": "Ronaldo", "position": "FWD", "club": "MUN"},
+               4: {"simple_name_raw": "Trent", "position": "DEF", "club": "LIV"},
+               5: {"simple_name_raw": "Martinez", "position": "GKP", "club": "AVL"},
+               6: {"simple_name_raw": "Targett", "position": "DEF", "club": "NEW"},
+               7: {"simple_name_raw": "Cancelo", "position": "DEF", "club": "MCI"},
+               8: {"simple_name_raw": "Sessegnon", "position": "DEF", "club": "TOT"},
+               9: {"simple_name_raw": "Diaz", "position": "MID", "club": "LIV"},
+               10: {"simple_name_raw": "Gallagher", "position": "MID", "club": "CRY"},
+               11: {"simple_name_raw": "Brownhill", "position": "MID", "club": "BUR"},
                }
 
     for p in players:

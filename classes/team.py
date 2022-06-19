@@ -51,9 +51,16 @@ class Team:
         else:
             return f"{self.current_team_size}/{self.target_team_size}"
 
+    def update_team_size(self):
+        self.current_team_size = self.squad.current_squad_size
+        return
+
     def add_squad_member(self, player, cost):
         # Add player to squad.
         self.squad.add_player_to_squad(player)
+
+        # Update team size.
+        self.update_team_size()
 
         # Update the team's remaining budget.
         self.update_remaining_budget(cost)

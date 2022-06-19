@@ -1,4 +1,6 @@
 import requests
+import pytz
+from datetime import datetime
 from unidecode import unidecode
 from classes.team import Team
 
@@ -12,7 +14,8 @@ class Auction:
     '''
 
     def __init__(self):
-        self.teams = []  # A list of participating teams.
+        # self.teams = []  # A list of participating teams.
+        self.teams = {}  # A dict of participating teams, keyed on their team name.
         self.players = {}  # The players available for auction. Each player is keyed on their ID, paired with an info dict.
         self.clubs = {}  # The clubs that players can play for.
         self.transaction_log = []  # A list of all transactions throughout the auction.
@@ -52,7 +55,8 @@ class Auction:
 
         # For each player, format the data points we want and add to the players class attribute.
         for player in raw_players:
-            player_formatted = {"code": player["code"],
+            player_formatted = {"id": player["id"],
+                                "code": player["code"],
                                 "simple_name_raw": player["web_name"],
                                 "simple_name_eng_chars": unidecode(player["web_name"]), # using unidecode to anglicise
                                 # name for easier searching
@@ -71,12 +75,14 @@ class Auction:
     def add_team(self, team_name):
         # Add new team to the teams list.
         # Check that the new team name is unique before adding.
-        if team_name in [team.name for team in self.teams]:
+        # if team_name in [team.name for team in self.teams]:
+        if team_name in self.teams:
             print(f'The team name "{team_name}" is already taken.')
             return
         else:
             new_team = Team(team_name)
-            self.teams.append(new_team)
+            # self.teams.append(new_team)
+            self.teams[team_name] = new_team
             print(f"Team {team_name} added successfully.")
             return
 
@@ -84,21 +90,57 @@ class Auction:
         # TODO: Ensure to return any players associated with the team back to the available pool.
         # Delete team from teams list.
         # Check that team exists before deleting.
-        if team_name not in [team.name for team in self.teams]:
+        # if team_name not in [team.name for team in self.teams]:
+        if team_name not in self.teams:
             print(f'Team "{team_name}" does not exist.')
             return
         else:
-            team_to_delete = next(team for team in self.teams if team.name == team_name)
-            self.teams.remove(team_to_delete)
+            # team_to_delete = next(team for team in self.teams if team.name == team_name)
+            # self.teams.remove(team_to_delete)
+            self.teams.pop(team_name)
             print(f"Team {team_name} deleted successfully.")
             return
 
+    def create_transaction(self, team, player, price):
+        # Takes as input the team (Team), player (dict) and price (INT)
+        transaction = {"team": team,
+                       "player": player,
+                       "price": price,
+                       "timestamp": datetime.now(pytz.timezone("Europe/London"))}
+        self.transaction_log.append(transaction)
+        return
+
+    def display_transaction_log(self):
+        display = ""
+        for t in self.transaction_log:
+            display += f"Team {t['team'].name} bought player {t['player']['simple_name_raw']} for £{t['price']}m.\n"
+        print(display)
+        return display
+
+    def confirm_purchase(self, team_name, player_id, price):
+        # Takes as input the team name (STR), the player id (STR), and the price of the purchase (INT).
+        # Get the player from the players dict.
+        player = self.players[player_id]
+
+        # Get the team object for the team.
+        team = self.teams[team_name]
+
+        # Add player to team.
+        team.add_squad_member(player, price)
+
+        # Add the purchase to the transaction log.
+        self.create_transaction(team, player, price)
+
+        # Mark the player as purchased so it can't be selected again.
+        player['player_purchased'] = True
+
+        return
 
     def print_teams(self):
         # Method to print the team names out neatly.
         teams_display = "Teams: "
         for team in self.teams:
-            teams_display += team.name + ", "
+            teams_display += team + ", "
         teams_display = teams_display[:-2]
         print(teams_display)
         return
@@ -107,7 +149,7 @@ class Auction:
 if __name__ == "__main__":
     test_auction = Auction()
     # test_auction.get_player_info_from_api()
-    # print(test_auction.players[1])
+    print(test_auction.players[1])
     # print(test_auction.players)
 
     # for player in test_auction.players:
@@ -126,3 +168,15 @@ if __name__ == "__main__":
     test_auction.print_teams()
 
     print(test_auction.clubs)
+
+    # zones = pytz.all_timezones
+    # print(zones)  # Europe/London
+
+    print()
+
+    test_auction.confirm_purchase("Stuart", 1, 2)
+
+    print(test_auction.teams['Stuart'])
+
+    test_auction.display_transaction_log()
+
