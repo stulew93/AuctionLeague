@@ -62,6 +62,22 @@ class AuctionLot(tk.Frame):
         label_player_info = tk.Label(self.frame_player_info, text=info_text, font="none 10 bold")
         label_player_info.grid(row=0, column=0, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
 
+        # Create frame for team selection and winning bid.
+        self.frame_winning_team = tk.Frame(self, bg='green')
+        self.frame_winning_team.place(rely=0.6, relwidth=1, relheight=0.4)
+
+        # Create combobox to select Team.
+        self.teams_list = [self.team.name for team in self.auction.teams]
+        self.combobox_teams = ttk.Combobox(self.frame_winning_team, values=self.teams_list, width=25)
+        self.combobox_teams.set("Select winning team:")
+        self.combobox_teams.bind("<Button>", self.update_teams_list_for_combobox)
+        self.combobox_teams.grid(row=0, column=0, sticky='ew', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
+
+    def update_teams_list_for_combobox(self, event):
+        teams_list = [team.name for team in self.auction.teams]
+        self.combobox_teams['values'] = teams_list
+        return
 
     def filter_players_by_club(self, event):
         club = self.combobox_clubs.get()
@@ -106,6 +122,8 @@ if __name__ == "__main__":
     root = tk.Tk()
     auction = Auction()
     frame_auction_lot = AuctionLot(root, auction)
+    auction.add_team("Stuart")
+    auction.add_team("Alex")
     frame_auction_lot.pack(side='top', fill='both', expand=True)
     root.mainloop()
 
