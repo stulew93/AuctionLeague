@@ -176,7 +176,7 @@ class AuctionLot(tk.Frame):
         player_id = int(player_name[player_name.index('(')+1:player_name.index(')')])
 
         # Confirm the purchase.
-        self.auction.confirm_purchase(team_name, player_name, price)
+        self.auction.confirm_purchase(team_name, player_id, price)
 
         # Update/reset frame ready for next auction lot.
         self.reset_auction_lot()
