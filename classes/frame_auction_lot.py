@@ -7,9 +7,10 @@ from classes.auction import Auction
 
 class AuctionLot(tk.Frame):
 
-    def __init__(self, parent, auction):
+    def __init__(self, parent, auction, team_display):
         tk.Frame.__init__(self, parent)
         self.auction = auction
+        self.frame_team_display = team_display
 
         # Variable to control padding across all widgets.
         self.FRAME_AUCTION_LOT_X_PAD = 10
@@ -159,6 +160,9 @@ class AuctionLot(tk.Frame):
         self.combobox_teams.delete(0, tk.END)
         self.entry_winning_bid.delete(0, tk.END)
         self.canvas.image = None
+
+        # Update team display in frame_teams.
+        self.frame_team_display.display_teams()
 
         print(f"{player_name[:player_name.index('(')-1]} added to team {team_name} for £{price}m.")
         return
