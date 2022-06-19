@@ -67,6 +67,20 @@ class TeamDisplay(tk.Frame):
         self.display_teams()
         return
 
+    def view_team(self, team):
+        view_window = tk.Tk()
+        view_window.title(team)
+        # canvas; used to set the window size.
+        canvas_team = tk.Canvas(view_window, height=200, width=200)
+        canvas_team.pack()
+        # Cast team to string to get squad displayed nicely.
+        team_info = str(self.auction.teams[team])
+        # Label to hold the team info.
+        label_team = tk.Label(canvas_team, text=team_info, font='none 10', anchor='w', justify=tk.LEFT)
+        label_team.pack(side=tk.LEFT)
+        view_window.mainloop()
+        return
+
     def display_teams(self):
         # For each team, add a label and display the team name.
         num_teams = len(self.auction.teams)
@@ -98,7 +112,7 @@ class TeamDisplay(tk.Frame):
             label_team_budget_info.grid(row=i, column=2, sticky='ew', padx=self.FRAME_TEAM_X_PAD)
 
             # Create "View" button.
-            button_view = tk.Button(self.frame_teams_info, text='VIEW')
+            button_view = tk.Button(self.frame_teams_info, text='VIEW', command=lambda t=team: self.view_team(t))
             button_view.grid(row=i, column=3, sticky='w', padx=self.FRAME_TEAM_X_PAD, pady=2)
         return
 
