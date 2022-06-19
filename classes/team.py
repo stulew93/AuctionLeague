@@ -18,9 +18,10 @@ class Team:
 
     def __str__(self):
         # Printing a Team instance displays the team name, and the playing squad.
-        team_str = "Team: " + self.name + "\n" \
-                   + "Remaining budget: " + str(self.remaining_budget) + "\n" \
-                   + str(self.squad)
+        team_str = f"Team: {self.name}\n" \
+                   f"Remaining budget: {str(self.remaining_budget)}\n" \
+                   f"\n" \
+                   f"{str(self.squad)}"
         # If team is complete, say so!
         if self.team_complete == True:
             team_str += "\n" + "Team {} complete!".format(self.name)
