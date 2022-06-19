@@ -49,7 +49,7 @@ class Squad:
     def add_player_to_squad(self, player):
         # Add player into the players dict, under the correct position.
         name, position, club = player["simple_name_raw"], player["position"], player["club"]
-        self.players[position].append(name)
+        self.players[position].append(name + ", " + club)
 
         # Increment the squad size.
         self.current_squad_size += 1
