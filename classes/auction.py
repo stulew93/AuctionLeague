@@ -12,7 +12,8 @@ class Auction:
     '''
 
     def __init__(self):
-        self.teams = []  # A list of participating teams.
+        # self.teams = []  # A list of participating teams.
+        self.teams = {}  # A dict of participating teams, keyed on their team name.
         self.players = {}  # The players available for auction. Each player is keyed on their ID, paired with an info dict.
         self.clubs = {}  # The clubs that players can play for.
         self.transaction_log = []  # A list of all transactions throughout the auction.
@@ -72,12 +73,14 @@ class Auction:
     def add_team(self, team_name):
         # Add new team to the teams list.
         # Check that the new team name is unique before adding.
-        if team_name in [team.name for team in self.teams]:
+        # if team_name in [team.name for team in self.teams]:
+        if team_name in self.teams:
             print(f'The team name "{team_name}" is already taken.')
             return
         else:
             new_team = Team(team_name)
-            self.teams.append(new_team)
+            # self.teams.append(new_team)
+            self.teams[team_name] = new_team
             print(f"Team {team_name} added successfully.")
             return
 
@@ -85,21 +88,27 @@ class Auction:
         # TODO: Ensure to return any players associated with the team back to the available pool.
         # Delete team from teams list.
         # Check that team exists before deleting.
-        if team_name not in [team.name for team in self.teams]:
+        # if team_name not in [team.name for team in self.teams]:
+        if team_name not in self.teams:
             print(f'Team "{team_name}" does not exist.')
             return
         else:
-            team_to_delete = next(team for team in self.teams if team.name == team_name)
-            self.teams.remove(team_to_delete)
+            # team_to_delete = next(team for team in self.teams if team.name == team_name)
+            # self.teams.remove(team_to_delete)
+            self.teams.pop(team_name)
             print(f"Team {team_name} deleted successfully.")
             return
 
+    def confirm_purchase(self, team, player, price):
+        team.add_squad_member(player, price)
+        player['player_purchased'] = True
+        return
 
     def print_teams(self):
         # Method to print the team names out neatly.
         teams_display = "Teams: "
         for team in self.teams:
-            teams_display += team.name + ", "
+            teams_display += team + ", "
         teams_display = teams_display[:-2]
         print(teams_display)
         return
