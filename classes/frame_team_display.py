@@ -21,6 +21,8 @@ class TeamDisplay(tk.Frame):
         # Add a text entry box for new team names, and a button to create team.
         self.entry_team_name = tk.Entry(self.frame_teams_entry, bg='white', text="Enter a team name:")
         self.entry_team_name.grid(row=1, column=0, columnspan=2, sticky='ew', padx=self.FRAME_TEAM_X_PAD, pady=2)
+        # Create team on Return
+        self.entry_team_name.bind("<Return>", self.create_team)
 
         # Add a button to add the team, using the name in the entry box.
         button_create_team = tk.Button(self.frame_teams_entry, text="CREATE TEAM", command=self.create_team)
@@ -47,7 +49,7 @@ class TeamDisplay(tk.Frame):
             label_heading = tk.Label(self.frame_teams_info, text=headings[i][0], font="none 10 bold")
             label_heading.grid(row=0, column=i, sticky=headings[i][1], padx=self.FRAME_TEAM_X_PAD, pady=2)
 
-    def create_team(self):
+    def create_team(self, event=None):
         # TODO: Pop up message if name is taken or is invalid (e.g. blank entry box).
         new_team_name = self.entry_team_name.get()
         self.auction.add_team(new_team_name)
