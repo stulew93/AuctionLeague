@@ -1,4 +1,6 @@
 import requests
+import pytz
+from datetime import datetime
 from unidecode import unidecode
 from classes.team import Team
 
@@ -99,9 +101,39 @@ class Auction:
             print(f"Team {team_name} deleted successfully.")
             return
 
-    def confirm_purchase(self, team, player, price):
+    def create_transaction(self, team, player, price):
+        # Takes as input the team (Team), player (dict) and price (INT)
+        transaction = {"team": team,
+                       "player": player,
+                       "price": price,
+                       "timestamp": datetime.now(pytz.timezone("Europe/London"))}
+        self.transaction_log.append(transaction)
+        return
+
+    def display_transaction_log(self):
+        display = ""
+        for t in self.transaction_log:
+            display += f"Team {t['team'].name} bought player {t['player']['simple_name_raw']} for £{t['price']}m.\n"
+        print(display)
+        return display
+
+    def confirm_purchase(self, team_name, player_id, price):
+        # Takes as input the team name (STR), the player id (STR), and the price of the purchase (INT).
+        # Get the player from the players dict.
+        player = self.players[player_id]
+
+        # Get the team object for the team.
+        team = self.teams[team_name]
+
+        # Add player to team.
         team.add_squad_member(player, price)
+
+        # Add the purchase to the transaction log.
+        self.create_transaction(team, player, price)
+
+        # Mark the player as purchased so it can't be selected again.
         player['player_purchased'] = True
+
         return
 
     def print_teams(self):
@@ -117,7 +149,7 @@ class Auction:
 if __name__ == "__main__":
     test_auction = Auction()
     # test_auction.get_player_info_from_api()
-    # print(test_auction.players[1])
+    print(test_auction.players[1])
     # print(test_auction.players)
 
     # for player in test_auction.players:
@@ -136,3 +168,15 @@ if __name__ == "__main__":
     test_auction.print_teams()
 
     print(test_auction.clubs)
+
+    # zones = pytz.all_timezones
+    # print(zones)  # Europe/London
+
+    print()
+
+    test_auction.confirm_purchase("Stuart", 1, 2)
+
+    print(test_auction.teams['Stuart'])
+
+    test_auction.display_transaction_log()
+

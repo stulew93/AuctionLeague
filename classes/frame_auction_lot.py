@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import ImageTk, Image
 from classes.auction import Auction
+from classes.frame_team_display import TeamDisplay
 
 class AuctionLot(tk.Frame):
 
@@ -35,7 +36,7 @@ class AuctionLot(tk.Frame):
         self.combobox_players = ttk.Combobox(self.frame_player_selection, values=sorted(self.player_list), width=40)
         self.combobox_players.set("Select player from dropdown:")
         self.combobox_players.grid(row=1, column=0, sticky='ew', padx=self.FRAME_AUCTION_LOT_X_PAD)
-        self.combobox_players.bind("<<ComboboxSelected>>", self.display_player_image)
+        self.combobox_players.bind("<<ComboboxSelected>>", self.display_player)
 
         # Create combobox to select a club as a filter.
         self.club_list = [self.auction.clubs[club] for club in self.auction.clubs]
@@ -59,8 +60,8 @@ class AuctionLot(tk.Frame):
         # Create label for player info.
         info_text = "Text that will describe the player"
         # TODO: function to update player text when player is selected.
-        label_player_info = tk.Label(self.frame_player_info, text=info_text, font="none 10 bold")
-        label_player_info.grid(row=0, column=0, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
+        self.label_player_info = tk.Label(self.frame_player_info, text=info_text, font="none 10 bold", justify=tk.LEFT)
+        self.label_player_info.grid(row=0, column=0, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
 
         # Create frame for team selection and winning bid.
         self.frame_winning_team = tk.Frame(self, bg='green')
@@ -110,13 +111,7 @@ class AuctionLot(tk.Frame):
         print(f"Filtered players of {club}.")
         return
 
-    def display_player_image(self, event):
-        player_name = self.combobox_players.get()
-        if player_name[0] == '(':  # if player has club in brackets in front of the name
-            player_name = player_name[6:]  # drop the first six characters.
-        # Get player_id from the end of the combobox input.
-        player_id = int(player_name[player_name.index('(')+1:player_name.index(')')])
-        player_code = self.auction.players[player_id]["code"]
+    def display_player_image(self, player_code):
         image_loc = f"C:/Users/stuar/Documents/PythonFiles/AuctionLeaguev2/images_repo/player_images/{player_code}.png"
 
         try:
@@ -134,32 +129,57 @@ class AuctionLot(tk.Frame):
         self.canvas.image = ImageTk.PhotoImage(img)
         self.canvas.create_image(0, 0, image=self.canvas.image, anchor='nw')
 
-    def confirm_purchase(self):
-        player_name = self.combobox_players.get()
-        team_name = self.combobox_teams.get()
-        price = int(self.entry_winning_bid.get())
+    def display_player_info(self, player_id):
+        player = self.auction.players[player_id]
+        player_info = f"FPL name: {player['simple_name_raw']}\n" \
+                      f"\n" \
+                      f"Full name: {player['first_name'] + ' ' + player['second_name']}\n" \
+                      f"\n" \
+                      f"Position: {player['position']}\n" \
+                      f"\n" \
+                      f"Club: {player['club']}"
+        self.label_player_info['text'] = player_info
 
-        # May be unnecessary complex in set-up, but this bit is basically getting the player dict from the overall
-        # players dict.
-        # Need to use the simple name from the selection box input, remove the club if it exists before
-        # the name, get the player id, and then use this as the key in the dict to get the player dict.
+    def display_player(self, event):
+        player_name = self.combobox_players.get()
         if player_name[0] == '(':  # if player has club in brackets in front of the name
             player_name = player_name[6:]  # drop the first six characters.
         # Get player_id from the end of the combobox input.
         player_id = int(player_name[player_name.index('(')+1:player_name.index(')')])
-        player = self.auction.players[player_id]
 
-        team = self.auction.teams[team_name]
+        player_code = self.auction.players[player_id]["code"]
+        self.display_player_image(player_code)
 
-        self.auction.confirm_purchase(team, player, price)
+        self.display_player_info(player_id)
+        return
 
-        # Update/reset frame ready for next auction lot.
+    def reset_auction_lot(self):
         self.update_players_list()
         self.combobox_players.delete(0, tk.END)
         self.combobox_clubs.delete(0, tk.END)
         self.combobox_teams.delete(0, tk.END)
         self.entry_winning_bid.delete(0, tk.END)
         self.canvas.image = None
+        self.label_player_info['text'] = ""
+        return
+
+    def confirm_purchase(self):
+        player_name = self.combobox_players.get()
+        team_name = self.combobox_teams.get()
+        price = int(self.entry_winning_bid.get())
+
+        # player_name comes as formatted in the list, with the player is after the name and possibly with the club
+        # before the name. Remove the club if it exists before the name and then get the player id.
+        if player_name[0] == '(':  # if player has club in brackets in front of the name
+            player_name = player_name[6:]  # drop the first six characters.
+        # Get player_id from the end of the combobox input.
+        player_id = int(player_name[player_name.index('(')+1:player_name.index(')')])
+
+        # Confirm the purchase.
+        self.auction.confirm_purchase(team_name, player_name, price)
+
+        # Update/reset frame ready for next auction lot.
+        self.reset_auction_lot()
 
         # Update team display in frame_teams.
         self.frame_team_display.display_teams()
@@ -171,7 +191,8 @@ class AuctionLot(tk.Frame):
 if __name__ == "__main__":
     root = tk.Tk()
     auction = Auction()
-    frame_auction_lot = AuctionLot(root, auction)
+    frame_team_display = TeamDisplay(root, auction)
+    frame_auction_lot = AuctionLot(root, auction, frame_team_display)
     frame_auction_lot.pack(side='top', fill='both', expand=True)
     auction.add_team("Stuart")
     auction.add_team("Alex")
