@@ -154,8 +154,8 @@ class AuctionLot(tk.Frame):
     def reset_auction_lot(self):
         self.update_players_list()
         self.combobox_players.set("Select player from dropdown:")
-        self.combobox_players.set("Select club:")
-        self.combobox_players.set("Select winning team:")
+        self.combobox_clubs.set("Select club:")
+        self.combobox_teams.set("Select winning team:")
         self.entry_winning_bid.delete(0, tk.END)
         self.canvas.image = None
         self.label_player_info['text'] = ""
