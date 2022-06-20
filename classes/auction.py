@@ -6,6 +6,8 @@ from classes.team import Team
 
 # TODO: method to change the name of a team.
 # TODO: method to add extra players to player list.
+# TODO: method to print transaction log to csv.
+# TODO: method to reverse previous transaction.
 
 class Auction:
     '''
