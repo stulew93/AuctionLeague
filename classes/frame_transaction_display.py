@@ -16,18 +16,10 @@ class TransactionDisplay(tk.Frame):
         self.label_transactions.grid(row=1, column=0, sticky='w')
 
     def get_latest_transactions(self):
-        # Get last 10 transactions and reverse them.
-        latest_transactions_list = self.auction.transaction_log[-10:][::-1]
-        # Format them into a string.
-        latest_transaction_string = ""
-        for t in latest_transactions_list:
-            t_formatted = f"Team {t['team'].name} bought player {t['player']['simple_name_raw']} " \
-                          f"({t['player']['position']}, {t['player']['club']}) for £{t['price']}m.\n"
-            latest_transaction_string += t_formatted
-        # Add the string as the text of the transactions label.
+        latest_transaction_string = self.auction.get_latest_transactions()
         self.label_transactions['text'] = latest_transaction_string
         return latest_transaction_string
-    pass
+
 
 if __name__ == "__main__":
     # test_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]

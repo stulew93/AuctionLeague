@@ -117,6 +117,17 @@ class Auction:
         print(display)
         return display
 
+    def get_latest_transactions(self):
+        # Get last 20 transactions and reverse them so the latest is first.
+        latest_transactions_list = self.transaction_log[-20:][::-1]
+        # Format them into a string.
+        latest_transaction_string = ""
+        for t in latest_transactions_list:
+            t_formatted = f"Team {t['team'].name} bought player {t['player']['simple_name_raw']} " \
+                          f"({t['player']['position']}, {t['player']['club']}) for £{t['price']}m.\n"
+            latest_transaction_string += t_formatted
+        return latest_transaction_string
+
     def confirm_purchase(self, team_name, player_id, price):
         # Takes as input the team name (STR), the player id (STR), and the price of the purchase (INT).
         # Get the player from the players dict.
