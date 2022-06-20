@@ -8,6 +8,7 @@ from classes.team import Team
 # TODO: method to add extra players to player list.
 # TODO: method to print transaction log to csv.
 # TODO: method to reverse previous transaction.
+# TODO: method to control nominating team.
 
 class Auction:
     '''
@@ -18,6 +19,9 @@ class Auction:
 
     def __init__(self):
         self.teams = {}  # A dict of participating teams, keyed on their team name.
+        self.nomination_seq = []  # List of the teams in order to control who is nominating players.
+        self.nomination_index = 0  # Current index in nomination sequence.
+        self.next_up_index = 1 # Next up index in nomination sequence.
         self.players = {}  # The players available for auction. Each player is keyed on their ID, paired with an info dict.
         self.clubs = {}  # The clubs that players can play for.
         self.transaction_log = []  # A list of all transactions throughout the auction.
@@ -101,6 +105,32 @@ class Auction:
             # self.teams.remove(team_to_delete)
             self.teams.pop(team_name)
             print(f"Team {team_name} deleted successfully.")
+            return
+
+    def initialise_nomination_seq(self):
+        self.nomination_seq = list(self.teams.keys())
+        print("Initialised nomination sequence.")
+        return
+
+    def update_nomination_index(self):
+        # If all teams are complete, do nothing.
+        if self.auction_complete == True:
+            return
+        else:
+            # Increment nomination index until we find a team that isn't already complete.
+            # Add one and take modulus over the number of teams, so we go back to the start of the list.
+            self.nomination_index = (self.nomination_index + 1) % len(self.teams)
+            while self.teams[self.nomination_seq[self.nomination_index]].team_complete == True:
+                # Add one and take modulus over the number of teams, so we go back to the start of the list.
+                self.nomination_index = (self.nomination_index + 1) % len(self.teams)
+
+            # Do the same for the next up index but starting from the new nomination index + 1.
+            self.next_up_index = (self.nomination_index + 1) % len(self.teams)
+            # Increment the next up index until we find a team that isn't already complete.
+            while self.teams[self.nomination_seq[self.next_up_index]].team_complete == True:
+                # Add one and take modulus over the number of teams, so we go back to the start of the list.
+                self.next_up_index = (self.next_up_index + 1) % len(self.teams)
+
             return
 
     def create_transaction(self, team, player, price):

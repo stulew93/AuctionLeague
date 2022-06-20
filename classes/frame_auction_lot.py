@@ -18,9 +18,33 @@ class AuctionLot(tk.Frame):
         # Variable to control padding across all widgets.
         self.FRAME_AUCTION_LOT_X_PAD = 10
 
+        # Create frame for nominating team info.
+        self.frame_nomination = tk.Frame(self)
+        self.frame_nomination.place(relwidth=1, relheight=0.1)
+
+        # Create label for heading "Currently nominating:"
+        label_currently_header = tk.Label(self.frame_nomination, text="Currently nominating:", font="none 10 bold")
+        label_currently_header.grid(row=0, column=1, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
+        # Create label for heading "Next up:"
+        label_next_header = tk.Label(self.frame_nomination, text="Next up:", font="none 10 bold")
+        label_next_header.grid(row=0, column=2, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
+        # Create button to initialise nominations.
+        button_init_nom = tk.Button(self.frame_nomination, text="Initialise Nominations")
+        button_init_nom.grid(row=1, column=0, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
+        # Create label for the currently nominating team
+        label_currently_nom = tk.Label(self.frame_nomination, font="none 10", bg='red')
+        label_currently_nom.grid(row=1, column=1, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
+        # Create label for the next nominating team
+        label_next_nom = tk.Label(self.frame_nomination, font="none 10")
+        label_next_nom.grid(row=1, column=2, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
         # Create frame for player selection.
         self.frame_player_selection = tk.Frame(self)
-        self.frame_player_selection.place(relwidth=1, relheight=0.15)
+        self.frame_player_selection.place(rely=0.1, relwidth=1, relheight=0.15)
         self.columnconfigure((0, 1), weight=1)
 
         # Create label for heading "Select player below:"
@@ -49,7 +73,7 @@ class AuctionLot(tk.Frame):
 
         # Create frame to display player image.
         self.frame_player_image = tk.Frame(self)
-        self.frame_player_image.place(rely=0.15, relwidth=0.35, relheight=0.4)
+        self.frame_player_image.place(rely=0.25, relwidth=0.35, relheight=0.4)
 
         # Create canvas for image
         self.canvas = tk.Canvas(self.frame_player_image)
@@ -57,7 +81,7 @@ class AuctionLot(tk.Frame):
 
         # Create frame to display player info.
         self.frame_player_info = tk.Frame(self)
-        self.frame_player_info.place(relx=0.40, rely=0.15, relwidth=0.4, relheight=0.4)
+        self.frame_player_info.place(relx=0.40, rely=0.25, relwidth=0.4, relheight=0.4)
 
         # Create label for player info.
         self.label_player_info = tk.Label(self.frame_player_info, font="none 10 bold", justify=tk.LEFT)
@@ -65,7 +89,7 @@ class AuctionLot(tk.Frame):
 
         # Create frame for team selection and winning bid.
         self.frame_winning_team = tk.Frame(self)
-        self.frame_winning_team.place(rely=0.6, relwidth=1, relheight=0.4)
+        self.frame_winning_team.place(rely=0.65, relwidth=1, relheight=0.35)
 
         # Create label for heading "Select winning team:"
         label_select_winning_team = tk.Label(self.frame_winning_team, text="Winning team:", font="none 10 bold")
