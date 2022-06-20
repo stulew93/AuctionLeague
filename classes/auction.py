@@ -5,6 +5,7 @@ from unidecode import unidecode
 from classes.team import Team
 
 # TODO: method to change the name of a team.
+# TODO: method to add extra players to player list.
 
 class Auction:
     '''
@@ -14,7 +15,6 @@ class Auction:
     '''
 
     def __init__(self):
-        # self.teams = []  # A list of participating teams.
         self.teams = {}  # A dict of participating teams, keyed on their team name.
         self.players = {}  # The players available for auction. Each player is keyed on their ID, paired with an info dict.
         self.clubs = {}  # The clubs that players can play for.

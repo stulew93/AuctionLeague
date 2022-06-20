@@ -10,8 +10,7 @@ class TeamDisplay(tk.Frame):
 
         # Frame for team creation and deletion.
         self.frame_teams_entry = tk.Frame(self)
-        self.frame_teams_entry.place(relwidth=1, relheight=0.15)
-        # self.frame_teams_entry.rowconfigure(tuple(range(2)), weight=1)
+        self.frame_teams_entry.place(relwidth=1, relheight=0.12)
         self.frame_teams_entry.columnconfigure(tuple(range(2)), weight=1)
 
         # Add label with text "Enter team name below:"
@@ -34,10 +33,8 @@ class TeamDisplay(tk.Frame):
 
         # Frame for team information.
         self.frame_teams_info = tk.Frame(self)
-        self.frame_teams_info.place(rely=0.15, relwidth=1, relheight=0.85)
-        self.frame_teams_info.columnconfigure(0, weight=4)
-        self.frame_teams_info.columnconfigure((1, 2), weight=2)
-        self.frame_teams_info.columnconfigure(3, weight=1)
+        self.frame_teams_info.place(rely=0.12, relwidth=1, relheight=0.88)
+        self.frame_teams_info.columnconfigure(0, weight=1)
 
         # Create column headings for list of teams.
         # Specify desired headings and sticky values:
@@ -83,28 +80,22 @@ class TeamDisplay(tk.Frame):
 
     def display_teams(self):
         # For each team, add a label and display the team name.
-        num_teams = len(self.auction.teams)
-        # for i in range(num_teams):
-        # Track row to create new label with i
+        # Track row to create new label with i.
         i = 0
         for team in self.auction.teams:
             # Display team name.
-            # team_name = self.auction.teams[i].name
-            # row=i+1 as start adding these to the grid in frame_teams_info after the column headings (row 0).
-            # label_team_name = tk.Label(self.frame_teams_info, text=team_name, font="none 10")
             label_team_name = tk.Label(self.frame_teams_info, text=team, font="none 10")
+            # row=i+1 as start adding these to the grid in frame_teams_info after the column headings (row 0).
             i += 1
             label_team_name.grid(row=i, column=0, sticky='w', padx=self.FRAME_TEAM_X_PAD)
 
             # Display team completion.
-            # team_completion = self.auction.teams[i].get_team_completion()
             team_completion = self.auction.teams[team].get_team_completion()
             label_team_completion = tk.Label(self.frame_teams_info, text=team_completion, font="none 10")
             label_team_completion.grid(row=i, column=1, sticky='ew', padx=self.FRAME_TEAM_X_PAD)
 
             # Display budget info.
             # In the form "(Remaining budget) / (Max single bid)"
-            # remaining_budget = self.auction.teams[i].remaining_budget
             remaining_budget = self.auction.teams[team].remaining_budget
             max_bid = self.auction.teams[team].max_bid
             team_budget_info = f"£{remaining_budget}m / £{max_bid}m"
