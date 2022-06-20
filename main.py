@@ -3,6 +3,7 @@ from classes.auction import Auction
 from classes.frame_title import TitleFrame
 from classes.frame_team_display import TeamDisplay
 from classes.frame_auction_lot import AuctionLot
+from classes.frame_transaction_display import TransactionDisplay
 
 HEIGHT = 600
 WIDTH = 800
@@ -31,8 +32,8 @@ frame_auction = AuctionLot(window, auction, frame_teams)
 frame_auction.place(relx=0.32, rely=0.05, relwidth=0.46, relheight=0.95)
 
 # frame for displaying past purchases.
-frame_history = tk.Frame(window, bg='blue')
-frame_history.place(relx=0.8, rely=0.05, relwidth=0.2, relheight=0.95)
+frame_transactions = TransactionDisplay(window, auction)
+frame_transactions.place(relx=0.8, rely=0.05, relwidth=0.2, relheight=0.95)
 
 # Run mainloop.
 window.mainloop()
