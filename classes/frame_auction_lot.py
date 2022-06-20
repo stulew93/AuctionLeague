@@ -5,13 +5,15 @@ from tkinter import ttk
 from PIL import ImageTk, Image
 from classes.auction import Auction
 from classes.frame_team_display import TeamDisplay
+from classes.frame_transaction_display import TransactionDisplay
 
 class AuctionLot(tk.Frame):
 
-    def __init__(self, parent, auction, team_display):
+    def __init__(self, parent, auction, team_display, transaction_display):
         tk.Frame.__init__(self, parent)
         self.auction = auction
         self.frame_team_display = team_display
+        self.frame_transaction_display = transaction_display
 
         # Variable to control padding across all widgets.
         self.FRAME_AUCTION_LOT_X_PAD = 10
@@ -55,7 +57,7 @@ class AuctionLot(tk.Frame):
 
         # Create frame to display player info.
         self.frame_player_info = tk.Frame(self)
-        self.frame_player_info.place(relx=0.35, rely=0.15, relwidth=0.4, relheight=0.4)
+        self.frame_player_info.place(relx=0.40, rely=0.15, relwidth=0.4, relheight=0.4)
 
         # Create label for player info.
         self.label_player_info = tk.Label(self.frame_player_info, font="none 10 bold", justify=tk.LEFT)
@@ -179,8 +181,11 @@ class AuctionLot(tk.Frame):
         # Update/reset frame ready for next auction lot.
         self.reset_auction_lot()
 
-        # Update team display in frame_teams.
+        # Update team display in frame_team_display.
         self.frame_team_display.display_teams()
+
+        # Update the transaction display in frame_transaction_display.
+        self.frame_transaction_display.get_latest_transactions()
 
         print(f"{player_name[:player_name.index('(')-1]} added to team {team_name} for £{price}m.")
         return
@@ -190,7 +195,8 @@ if __name__ == "__main__":
     root = tk.Tk()
     auction = Auction()
     frame_team_display = TeamDisplay(root, auction)
-    frame_auction_lot = AuctionLot(root, auction, frame_team_display)
+    frame_transaction_display = TransactionDisplay(root, auction)
+    frame_auction_lot = AuctionLot(root, auction, frame_team_display, frame_transaction_display)
     frame_auction_lot.pack(side='top', fill='both', expand=True)
     auction.add_team("Stuart")
     auction.add_team("Alex")

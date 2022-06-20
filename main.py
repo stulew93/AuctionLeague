@@ -27,13 +27,13 @@ frame_title.place(relwidth=1, relheight=0.05)
 frame_teams = TeamDisplay(window, auction)
 frame_teams.place(rely=0.05, relwidth=0.30, relheight=0.95)
 
-# frame for selecting player to auction.
-frame_auction = AuctionLot(window, auction, frame_teams)
-frame_auction.place(relx=0.32, rely=0.05, relwidth=0.46, relheight=0.95)
-
 # frame for displaying past purchases.
 frame_transactions = TransactionDisplay(window, auction)
-frame_transactions.place(relx=0.8, rely=0.05, relwidth=0.2, relheight=0.95)
+frame_transactions.place(relx=0.7, rely=0.05, relwidth=0.3, relheight=0.95)
+
+# frame for selecting player to auction.
+frame_auction = AuctionLot(window, auction, frame_teams, frame_transactions)
+frame_auction.place(relx=0.32, rely=0.05, relwidth=0.38, relheight=0.95)
 
 # Run mainloop.
 window.mainloop()
