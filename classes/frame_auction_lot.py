@@ -7,6 +7,8 @@ from classes.auction import Auction
 from classes.frame_team_display import TeamDisplay
 from classes.frame_transaction_display import TransactionDisplay
 
+# TODO: pop up to confirm auction.
+
 class AuctionLot(tk.Frame):
 
     def __init__(self, parent, auction, team_display, transaction_display):
