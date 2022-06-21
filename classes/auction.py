@@ -6,7 +6,6 @@ from classes.team import Team
 
 # TODO: method to change the name of a team.
 # TODO: method to add extra players to player list.
-# TODO: method to print transaction log to csv.
 # TODO: method to reverse previous transaction.
 
 class Auction:
@@ -29,6 +28,11 @@ class Auction:
         # URL for the FPL api.
         self.url = 'https://fantasy.premierleague.com/api/bootstrap-static/'
         self.get_player_info_from_api()
+
+        # Initialise transaction log csv with headings.
+        with open("transaction_log.csv", 'w') as f:
+            columns = "Team, Player, Position, Club, Price, Timestamp\n"
+            f.write(columns)
 
     def get_position(self, positions_list, id):
         # Used in get_player_info_from_api.
@@ -138,7 +142,13 @@ class Auction:
                        "player": player,
                        "price": price,
                        "timestamp": datetime.now(pytz.timezone("Europe/London"))}
+        # Add to transaction log.
         self.transaction_log.append(transaction)
+        # Add to transaction log csv. Open file in append mode.
+        with open("transaction_log.csv", 'a') as f:
+            new_line = f"{team.name}, {player['simple_name_raw']}, {player['position']}, {player['club']}, " \
+                       f"{price}, {transaction['timestamp']}\n"
+            f.write(new_line)
         return
 
     def display_transaction_log(self):
