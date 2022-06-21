@@ -63,14 +63,14 @@ class Team:
         # Update team size.
         self.update_team_size()
 
+        # Update team completion.
+        self.update_team_complete()
+
         # Update the team's remaining budget.
         self.update_remaining_budget(cost)
 
         # Update the team's max bid.
         self.update_max_bid()
-
-        # Update team completion.
-        self.update_team_complete()
 
         print("Squad member added to team {}.".format(self.name))
         return

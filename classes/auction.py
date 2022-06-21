@@ -177,6 +177,9 @@ class Auction:
         # Mark the player as purchased so it can't be selected again.
         player['player_purchased'] = True
 
+        # Update the nomination index.
+        self.update_nomination_index()
+
         return
 
     def print_teams(self):

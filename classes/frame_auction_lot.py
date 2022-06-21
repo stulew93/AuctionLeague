@@ -31,16 +31,16 @@ class AuctionLot(tk.Frame):
         label_next_header.grid(row=0, column=2, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
 
         # Create button to initialise nominations.
-        button_init_nom = tk.Button(self.frame_nomination, text="Initialise Nominations")
+        button_init_nom = tk.Button(self.frame_nomination, text="Initialise Nominations", command=self.initialise_nominations)
         button_init_nom.grid(row=1, column=0, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
 
         # Create label for the currently nominating team
-        label_currently_nom = tk.Label(self.frame_nomination, font="none 10", bg='red')
-        label_currently_nom.grid(row=1, column=1, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
+        self.label_current_nom = tk.Label(self.frame_nomination, font="none 10")
+        self.label_current_nom.grid(row=1, column=1, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
 
         # Create label for the next nominating team
-        label_next_nom = tk.Label(self.frame_nomination, font="none 10")
-        label_next_nom.grid(row=1, column=2, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
+        self.label_next_nom = tk.Label(self.frame_nomination, font="none 10")
+        self.label_next_nom.grid(row=1, column=2, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
 
         # Create frame for player selection.
         self.frame_player_selection = tk.Frame(self)
@@ -116,7 +116,7 @@ class AuctionLot(tk.Frame):
 
 
     def update_teams_list(self, event):
-        teams_list = [team for team in self.auction.teams]
+        teams_list = [team for team in self.auction.teams if self.auction.teams[team].team_complete == False]
         self.combobox_teams['values'] = teams_list
         return
 
@@ -211,9 +211,21 @@ class AuctionLot(tk.Frame):
         # Update the transaction display in frame_transaction_display.
         self.frame_transaction_display.get_latest_transactions()
 
+        # Update the nomination labels.
+        self.update_nominations()
+
         print(f"{player_name[:player_name.index('(')-1]} added to team {team_name} for £{price}m.")
         return
 
+    def update_nominations(self):
+        self.label_current_nom['text'] = self.auction.nomination_seq[self.auction.nomination_index]
+        self.label_next_nom['text'] = self.auction.nomination_seq[self.auction.next_up_index]
+        return
+
+    def initialise_nominations(self):
+        self.auction.initialise_nomination_seq()
+        self.update_nominations()
+        return
 
 if __name__ == "__main__":
     root = tk.Tk()
