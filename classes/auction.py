@@ -192,6 +192,75 @@ class Auction:
 
         return
 
+    def can_bid(self, team, player):
+        # Method which takes in team (Team) and player (dict), and returns a tuple with a boolean indicating whether
+        # the team can bid for the player or not, and a string representing the reason.
+        # If team is complete then cannot bid.
+        if team.team_complete == True:
+            return (False, "Team complete.")
+        # If team already has three players from the club, cannot bid.
+        elif team.squad.club_count[player["club"]] == 3:
+            return (False, f"Already have three players from {player['club']}.")
+        # If player is a GKP
+        elif player["position"] == "GKP":
+            # and team already has a GKP, cannot bid.
+            if len(team.squad.players["GKP"]) == 1:
+                return (False, "Invalid formation (>1 GKP).")
+            else:
+                return (True, "Can bid.")
+        # If player is not a GK
+        elif player["position"] != "GKP":
+            # and already have 10 outfield players, cannot bid.
+            if len(team.squad.players["DEF"]) + len(team.squad.players["MID"]) + len(team.squad.players["FWD"]) == 10:
+                return (False, "Invalid formation (>10 outfield).")
+        # If player is a DEF
+        elif player["position"] == "DEF":
+            # and team already has 5 DEFs, cannot bid.
+            if len(team.squad.players["DEF"]) == 5:
+                return (False, "Invalid formation (>5 DEF).")
+            # and team has 4 DEFs
+            elif len(team.squad.players["DEF"]) == 4:
+                # and 5 MIDs, cannot bid.
+                if len(team.squad.players["MID"]) == 5:
+                    return (False, "Invalid formation (5/5/0).")
+                else:
+                    return (True, "Can bid.")
+            else:
+                return (True, "Can bid.")
+        # If player is a MID
+        elif player["position"] == "MID":
+            # and the team already has 5 MIDs, cannot bid.
+            if len(team.squad.players["MID"]) == 5:
+                return (False, "Invalid formation (>5 MID).")
+            # and team has 4 MIDs
+            elif len(team.squad.players["MID"]) == 4:
+                # and 5 DEFs, cannot bid.
+                if len(team.squad.players["DEF"]) == 5:
+                    return (False, "Invalid formation (5/5/0).")
+                # and 3 FWDs, cannot bid.
+                elif len(team.squad.players["FWD"]) == 3:
+                    return (False, "Invalid formation (2/5/3).")
+                else:
+                    return (True, "Can bid.")
+            else:
+                return (True, "Can bid.")
+        # If player is a FWD
+        elif player["position"] == "FWD":
+            # and the team already has 3 FWDs, cannot bid.
+            if len(team.squad.players["FWD"]) == 3:
+                return (False, "Invalid formation (>3 FWD).")
+            # and the team has 2 FWDs
+            elif len(team.squad.players["FWD"]) == 2:
+                # and 5 MIDs, cannot bid.
+                if len(team.squad.players["MID"]) == 5:
+                    return (False, "Invalid formation (2/5/3).")
+                else:
+                    return (True, "Can bid.")
+            else:
+                (True, "Can bid.")
+        else:
+            return (False, "Something went wrong with validation logic!")
+
     def print_teams(self):
         # Method to print the team names out neatly.
         teams_display = "Teams: "
@@ -205,7 +274,7 @@ class Auction:
 if __name__ == "__main__":
     test_auction = Auction()
     # test_auction.get_player_info_from_api()
-    print(test_auction.players[1])
+    # print(test_auction.players[1])
     # print(test_auction.players)
 
     # for player in test_auction.players:
@@ -213,26 +282,28 @@ if __name__ == "__main__":
 
     test_auction.add_team("Stuart")
     test_auction.add_team("Alex")
-    test_auction.add_team("Stuart")
-    test_auction.delete_team("Alex")
-    test_auction.delete_team("Alex")
-
-    for team in test_auction.teams:
-        print(team)
-        print("----------")
-
-    test_auction.print_teams()
-
-    print(test_auction.clubs)
+    # test_auction.add_team("Stuart")
+    # test_auction.delete_team("Alex")
+    # test_auction.delete_team("Alex")
+    #
+    # for team in test_auction.teams:
+    #     print(team)
+    #     print("----------")
+    #
+    # test_auction.print_teams()
+    #
+    # print(test_auction.clubs)
 
     # zones = pytz.all_timezones
     # print(zones)  # Europe/London
 
-    print()
+    # print()
+    #
+    # test_auction.confirm_purchase("Stuart", 1, 2)
+    #
+    # print(test_auction.teams['Stuart'])
+    #
+    # test_auction.display_transaction_log()
 
-    test_auction.confirm_purchase("Stuart", 1, 2)
-
-    print(test_auction.teams['Stuart'])
-
-    test_auction.display_transaction_log()
-
+    for p in test_auction.players:
+        print(test_auction.players[p])
