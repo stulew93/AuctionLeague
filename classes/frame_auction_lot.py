@@ -68,7 +68,7 @@ class AuctionLot(tk.Frame):
 
         # Create combobox to select a club as a filter.
         self.club_list = [self.auction.clubs[club] for club in self.auction.clubs]
-        self.combobox_clubs = ttk.Combobox(self.frame_player_selection, values=self.club_list, width=10)
+        self.combobox_clubs = ttk.Combobox(self.frame_player_selection, values=self.club_list, width=10, height=20)
         self.combobox_clubs.set("Select club:")
         self.combobox_clubs.grid(row=1, column=1, sticky='ew', padx=self.FRAME_AUCTION_LOT_X_PAD)
         self.combobox_clubs.bind("<<ComboboxSelected>>", self.filter_players_by_club)
