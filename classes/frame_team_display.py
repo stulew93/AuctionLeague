@@ -69,14 +69,17 @@ class TeamDisplay(tk.Frame):
             return
 
     def delete_team(self):
-        # TODO: Pop up message if team doesn't exist.
         team_to_delete = self.entry_team_name.get()
-        self.auction.delete_team(team_to_delete)
-        for label in self.frame_teams_info.grid_slaves():
-            if int(label.grid_info()["row"]) > 0:
-                label.grid_forget()
-        self.display_teams()
-        return
+        result_delete_team = self.auction.delete_team(team_to_delete)
+        if result_delete_team == "Team name does not exist.":
+            messagebox.showinfo("Invalid Team Name", f'The team name "{team_to_delete}" does not exist.')
+            return
+        else:
+            for label in self.frame_teams_info.grid_slaves():
+                if int(label.grid_info()["row"]) > 0:
+                    label.grid_forget()
+            self.display_teams()
+            return
 
     def view_team(self, team):
         view_window = tk.Tk()

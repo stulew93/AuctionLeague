@@ -7,7 +7,6 @@ from classes.team import Team
 # TODO: method to change the name of a team.
 # TODO: method to add extra players to player list.
 # TODO: method to ingest list of transactions.
-# TODO: add validation logic.
 
 class Auction:
     '''
@@ -105,13 +104,13 @@ class Auction:
         # if team_name not in [team.name for team in self.teams]:
         if team_name not in self.teams:
             print(f'Team "{team_name}" does not exist.')
-            return
+            return "Team name does not exist."
         else:
             # team_to_delete = next(team for team in self.teams if team.name == team_name)
             # self.teams.remove(team_to_delete)
             self.teams.pop(team_name)
             print(f"Team {team_name} deleted successfully.")
-            return
+            return "Team deleted."
 
     def initialise_nomination_seq(self):
         self.nomination_seq = list(self.teams.keys())
