@@ -33,7 +33,13 @@ frame_transactions.place(relx=0.7, rely=0.05, relwidth=0.3, relheight=0.95)
 
 # frame for selecting player to auction.
 frame_auction = AuctionLot(window, auction, frame_teams, frame_transactions)
-frame_auction.place(relx=0.32, rely=0.05, relwidth=0.38, relheight=0.95)
+frame_auction.place(relx=0.32, rely=0.05, relwidth=0.36, relheight=0.95)
+
+# border frames
+frame_border_1 = tk.Frame(window, bg='black')
+frame_border_2 = tk.Frame(window, bg='black')
+frame_border_1.place(relx=0.305, rely=0.05, relwidth=0.01, relheight=0.95)
+frame_border_2.place(relx=0.685, rely=0.05, relwidth=0.01, relheight=0.95)
 
 # Run mainloop.
 window.mainloop()
