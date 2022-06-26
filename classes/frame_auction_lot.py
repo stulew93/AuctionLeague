@@ -64,7 +64,7 @@ class AuctionLot(tk.Frame):
         self.combobox_players = ttk.Combobox(self.frame_player_selection, values=sorted(self.player_list), width=40)
         self.combobox_players.set("Select player from dropdown:")
         self.combobox_players.grid(row=1, column=0, sticky='ew', padx=self.FRAME_AUCTION_LOT_X_PAD)
-        self.combobox_players.bind("<<ComboboxSelected>>", self.display_player)
+        self.combobox_players.bind("<<ComboboxSelected>>", self.select_player)
 
         # Create combobox to select a club as a filter.
         self.club_list = [self.auction.clubs[club] for club in self.auction.clubs]
@@ -83,7 +83,7 @@ class AuctionLot(tk.Frame):
 
         # Create frame to display player info.
         self.frame_player_info = tk.Frame(self)
-        self.frame_player_info.place(relx=0.40, rely=0.25, relwidth=0.4, relheight=0.4)
+        self.frame_player_info.place(relx=0.40, rely=0.25, relwidth=0.6, relheight=0.4)
 
         # Create label for player info.
         self.label_player_info = tk.Label(self.frame_player_info, font="none 10 bold", justify=tk.LEFT)
@@ -118,7 +118,17 @@ class AuctionLot(tk.Frame):
 
 
     def update_teams_list(self, event):
-        teams_list = [team for team in self.auction.teams if self.auction.teams[team].team_complete == False]
+        # Get player.
+        player_name = self.combobox_players.get()
+        if player_name[0] == '(':  # if player has club in brackets in front of the name
+            player_name = player_name[6:]  # drop the first six characters.
+        # Get player_id from the end of the combobox input.
+        player_id = int(player_name[player_name.index('(') + 1:player_name.index(')')])
+        player = self.auction.players[player_id]
+
+        # Update list only with teams which can bid.
+        teams_list = [team_name for team_name in self.auction.teams
+                      if self.auction.can_bid(self.auction.teams[team_name], player)[0] == True]
         self.combobox_teams['values'] = teams_list
         return
 
@@ -166,18 +176,45 @@ class AuctionLot(tk.Frame):
                       f"Club: {player['club']}"
         self.label_player_info['text'] = player_info
 
-    def display_player(self, event):
-        player_name = self.combobox_players.get()
-        if player_name[0] == '(':  # if player has club in brackets in front of the name
-            player_name = player_name[6:]  # drop the first six characters.
-        # Get player_id from the end of the combobox input.
-        player_id = int(player_name[player_name.index('(')+1:player_name.index(')')])
+    def display_player(self, player_id):
+        # player_name = self.combobox_players.get()
+        # if player_name[0] == '(':  # if player has club in brackets in front of the name
+        #     player_name = player_name[6:]  # drop the first six characters.
+        # # Get player_id from the end of the combobox input.
+        # player_id = int(player_name[player_name.index('(')+1:player_name.index(')')])
 
         player_code = self.auction.players[player_id]["code"]
         self.display_player_image(player_code)
 
         self.display_player_info(player_id)
         return
+
+    def select_player(self, event):
+        # When a player is selected for auction, run validation checks on all Teams to see which can bid.
+        # Display the player image and player info.
+
+        player_name = self.combobox_players.get()
+        if player_name[0] == '(':  # if player has club in brackets in front of the name
+            player_name = player_name[6:]  # drop the first six characters.
+        # Get player_id from the end of the combobox input.
+        player_id = int(player_name[player_name.index('(')+1:player_name.index(')')])
+
+        player = self.auction.players[player_id]
+        for team_name in self.auction.teams:
+            team = self.auction.teams[team_name]
+            # Get team bidding status - in form tuple (True/False, reason).
+            can_team_bid = self.auction.can_bid(team, player)
+            # print(team_name, ": ", can_team_bid)
+            # Amend the tam display label depending on status. Outline in green if they can bid, red if they can't
+            team_label = self.frame_team_display.team_label_dict[team_name]
+            if can_team_bid[0] == False:
+                team_label.config(bg='#ed9791')
+            else:
+                team_label.config(bg='#dcefa7')
+
+        # Display player image and info.
+        self.display_player(player_id)
+        pass
 
     def reset_auction_lot(self):
         self.update_players_list()
@@ -238,6 +275,8 @@ if __name__ == "__main__":
     frame_auction_lot.pack(side='top', fill='both', expand=True)
     auction.add_team("Stuart")
     auction.add_team("Alex")
+    frame_team_display.display_teams()
+    print(frame_team_display.team_label_dict)
     print(auction.players[4])
     root.mainloop()
 

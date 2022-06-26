@@ -47,12 +47,18 @@ class TeamDisplay(tk.Frame):
             label_heading = tk.Label(self.frame_teams_info, text=headings[i][0], font="none 10 bold")
             label_heading.grid(row=0, column=i, sticky=headings[i][1], padx=self.FRAME_TEAM_X_PAD, pady=2)
 
+        # Create dict to store the labels for ecah team in the team display, to make it easier to retrieve and edit
+        # them (e.g. for highlighting if they can bid on a player).
+        # Will be keyed on team name, value as the label displaying the team name.
+        self.team_label_dict = {}
+
     def create_team(self, event=None):
         # TODO: Pop up message if name is taken or is invalid (e.g. blank entry box).
         new_team_name = self.entry_team_name.get()
         self.auction.add_team(new_team_name)
         self.display_teams()
         self.entry_team_name.delete(0, 'end')
+        print(self.team_label_dict)
         return
 
     def delete_team(self):
@@ -83,29 +89,33 @@ class TeamDisplay(tk.Frame):
         # For each team, add a label and display the team name.
         # Track row to create new label with i.
         i = 0
-        for team in self.auction.teams:
+        for team_name in self.auction.teams:
             # Display team name.
-            label_team_name = tk.Label(self.frame_teams_info, text=team, font="none 10")
+            label_team_name = tk.Label(self.frame_teams_info, text=team_name, font="none 10", justify=tk.LEFT, anchor='w')
             # row=i+1 as start adding these to the grid in frame_teams_info after the column headings (row 0).
             i += 1
-            label_team_name.grid(row=i, column=0, sticky='w', padx=self.FRAME_TEAM_X_PAD)
+            label_team_name.grid(row=i, column=0, sticky='ew', padx=self.FRAME_TEAM_X_PAD)
+
+            # Add team label to team_label_dict.
+            self.team_label_dict[team_name] = label_team_name
 
             # Display team completion.
-            team_completion = self.auction.teams[team].get_team_completion()
+            team_completion = self.auction.teams[team_name].get_team_completion()
             label_team_completion = tk.Label(self.frame_teams_info, text=team_completion, font="none 10")
             label_team_completion.grid(row=i, column=1, sticky='ew', padx=self.FRAME_TEAM_X_PAD)
 
             # Display budget info.
             # In the form "(Remaining budget) / (Max single bid)"
-            remaining_budget = self.auction.teams[team].remaining_budget
-            max_bid = self.auction.teams[team].max_bid
+            remaining_budget = self.auction.teams[team_name].remaining_budget
+            max_bid = self.auction.teams[team_name].max_bid
             team_budget_info = f"£{remaining_budget}m / £{max_bid}m"
             label_team_budget_info = tk.Label(self.frame_teams_info, text=team_budget_info, font="none 10")
             label_team_budget_info.grid(row=i, column=2, sticky='ew', padx=self.FRAME_TEAM_X_PAD)
 
             # Create "View" button.
-            button_view = tk.Button(self.frame_teams_info, text='VIEW', command=lambda t=team: self.view_team(t))
+            button_view = tk.Button(self.frame_teams_info, text='VIEW', command=lambda t=team_name: self.view_team(t))
             button_view.grid(row=i, column=3, sticky='w', padx=self.FRAME_TEAM_X_PAD, pady=2)
+
         return
 
 if __name__ == "__main__":

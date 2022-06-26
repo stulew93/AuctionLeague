@@ -199,8 +199,9 @@ class Auction:
         if team.team_complete == True:
             return (False, "Team complete.")
         # If team already has three players from the club, cannot bid.
-        elif team.squad.club_count[player["club"]] == 3:
-            return (False, f"Already have three players from {player['club']}.")
+        elif player["club"] in team.squad.club_count:
+            if team.squad.club_count[player["club"]] == 3:
+                return (False, f"Already have three players from {player['club']}.")
         # If player is a GKP
         elif player["position"] == "GKP":
             # and team already has a GKP, cannot bid.
@@ -209,57 +210,57 @@ class Auction:
             else:
                 return (True, "Can bid.")
         # If player is not a GK
-        elif player["position"] != "GKP":
+        else:
             # and already have 10 outfield players, cannot bid.
             if len(team.squad.players["DEF"]) + len(team.squad.players["MID"]) + len(team.squad.players["FWD"]) == 10:
                 return (False, "Invalid formation (>10 outfield).")
-        # If player is a DEF
-        elif player["position"] == "DEF":
-            # and team already has 5 DEFs, cannot bid.
-            if len(team.squad.players["DEF"]) == 5:
-                return (False, "Invalid formation (>5 DEF).")
-            # and team has 4 DEFs
-            elif len(team.squad.players["DEF"]) == 4:
-                # and 5 MIDs, cannot bid.
-                if len(team.squad.players["MID"]) == 5:
-                    return (False, "Invalid formation (5/5/0).")
-                else:
-                    return (True, "Can bid.")
-            else:
-                return (True, "Can bid.")
-        # If player is a MID
-        elif player["position"] == "MID":
-            # and the team already has 5 MIDs, cannot bid.
-            if len(team.squad.players["MID"]) == 5:
-                return (False, "Invalid formation (>5 MID).")
-            # and team has 4 MIDs
-            elif len(team.squad.players["MID"]) == 4:
-                # and 5 DEFs, cannot bid.
+            # If player is a DEF
+            elif player["position"] == "DEF":
+                # and team already has 5 DEFs, cannot bid.
                 if len(team.squad.players["DEF"]) == 5:
-                    return (False, "Invalid formation (5/5/0).")
-                # and 3 FWDs, cannot bid.
-                elif len(team.squad.players["FWD"]) == 3:
-                    return (False, "Invalid formation (2/5/3).")
+                    return (False, "Invalid formation (>5 DEF).")
+                # and team has 4 DEFs
+                elif len(team.squad.players["DEF"]) == 4:
+                    # and 5 MIDs, cannot bid.
+                    if len(team.squad.players["MID"]) == 5:
+                        return (False, "Invalid formation (5/5/0).")
+                    else:
+                        return (True, "Can bid.")
                 else:
                     return (True, "Can bid.")
-            else:
-                return (True, "Can bid.")
-        # If player is a FWD
-        elif player["position"] == "FWD":
-            # and the team already has 3 FWDs, cannot bid.
-            if len(team.squad.players["FWD"]) == 3:
-                return (False, "Invalid formation (>3 FWD).")
-            # and the team has 2 FWDs
-            elif len(team.squad.players["FWD"]) == 2:
-                # and 5 MIDs, cannot bid.
+            # If player is a MID
+            elif player["position"] == "MID":
+                # and the team already has 5 MIDs, cannot bid.
                 if len(team.squad.players["MID"]) == 5:
-                    return (False, "Invalid formation (2/5/3).")
+                    return (False, "Invalid formation (>5 MID).")
+                # and team has 4 MIDs
+                elif len(team.squad.players["MID"]) == 4:
+                    # and 5 DEFs, cannot bid.
+                    if len(team.squad.players["DEF"]) == 5:
+                        return (False, "Invalid formation (5/5/0).")
+                    # and 3 FWDs, cannot bid.
+                    elif len(team.squad.players["FWD"]) == 3:
+                        return (False, "Invalid formation (2/5/3).")
+                    else:
+                        return (True, "Can bid.")
+                else:
+                    return (True, "Can bid.")
+            # If player is a FWD
+            elif player["position"] == "FWD":
+                # and the team already has 3 FWDs, cannot bid.
+                if len(team.squad.players["FWD"]) == 3:
+                    return (False, "Invalid formation (>3 FWD).")
+                # and the team has 2 FWDs
+                elif len(team.squad.players["FWD"]) == 2:
+                    # and 5 MIDs, cannot bid.
+                    if len(team.squad.players["MID"]) == 5:
+                        return (False, "Invalid formation (2/5/3).")
+                    else:
+                        return (True, "Can bid.")
                 else:
                     return (True, "Can bid.")
             else:
-                (True, "Can bid.")
-        else:
-            return (False, "Something went wrong with validation logic!")
+                return (False, "Something went wrong with validation logic!")
 
     def print_teams(self):
         # Method to print the team names out neatly.
@@ -279,7 +280,6 @@ if __name__ == "__main__":
 
     # for player in test_auction.players:
     #     print(player, ":", test_auction.players[player])
-
     test_auction.add_team("Stuart")
     test_auction.add_team("Alex")
     # test_auction.add_team("Stuart")
@@ -307,3 +307,6 @@ if __name__ == "__main__":
 
     for p in test_auction.players:
         print(test_auction.players[p])
+
+    result = test_auction.can_bid(test_auction.teams["Stuart"], test_auction.players[1])
+    print(result)
