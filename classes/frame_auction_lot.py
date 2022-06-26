@@ -73,6 +73,11 @@ class AuctionLot(tk.Frame):
         self.combobox_clubs.grid(row=1, column=1, sticky='ew', padx=self.FRAME_AUCTION_LOT_X_PAD)
         self.combobox_clubs.bind("<<ComboboxSelected>>", self.filter_players_by_club)
 
+        # Create button to add new players to the players list.
+        self.button_add_players = tk.Button(self.frame_player_selection, text="Add players from CSV",
+                                            command=self.add_players_from_csv)
+        self.button_add_players.grid(row=1, column=2, sticky='ew', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
         # Create frame to display player image.
         self.frame_player_image = tk.Frame(self)
         self.frame_player_image.place(rely=0.25, relwidth=0.35, relheight=0.4)
@@ -136,6 +141,41 @@ class AuctionLot(tk.Frame):
         player_list = [f"({player['club']}) {player['simple_name_eng_chars']} ({player['id']})"
                        for player in self.auction.players.values() if player['player_purchased'] == False]
         self.combobox_players['values'] = sorted(player_list)
+        return
+
+    def add_players_from_csv(self):
+        # Create new Tk to handle importing new players csv.
+        root = tk.Tk()
+        root.title("Add new players from .csv file")
+        frame = tk.Frame(root)
+        frame.pack()
+        # Create label
+        label_enter_file_path = tk.Label(frame, text="Enter full file path for the csv below:", font="none 10 bold")
+        label_enter_file_path.grid(row=0, column=0, sticky='ew', padx=self.FRAME_AUCTION_LOT_X_PAD)
+        # Create entry box.
+        entry_file_path = tk.Entry(frame, bg='white', text="Enter full file path:")
+        entry_file_path.grid(row=1, column=0, sticky='ew', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
+        # Define function to assign to button.
+        def add_players_to_auction():
+            file_path = entry_file_path.get()
+            # Add new players from csv to the auction, and save the return string in variable.
+            add_players_result = self.auction.add_players_from_csv(file_path)
+            # Clear the entry box, and display the result of trying to insert the new players.
+            entry_file_path.delete(0, tk.END)
+            label_result["text"] = add_players_result
+            # Reset the auction lot.
+            self.reset_auction_lot()
+            return
+
+        # Create confirm button.
+        button_add_players = tk.Button(frame, text="Confirm", command=add_players_to_auction)
+        button_add_players.grid(row=2, column=0)
+        # Create result label.
+        label_result = tk.Label(frame, font="none 10 bold")
+        label_result.grid(row=3, column=0)
+
+        root.mainloop()
         return
 
     def filter_players_by_club(self, event):
