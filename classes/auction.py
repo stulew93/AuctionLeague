@@ -17,6 +17,8 @@ class Auction:
 
     def __init__(self):
         self.teams = {}  # A dict of participating teams, keyed on their team name.
+        self.cannot_bid_team_reasons = {}  # A dict that will hold reasons for not being able to bid on a player, and
+        # the teams that the reasons apply to.
         self.nomination_seq = []  # List of the teams in order to control who is nominating players.
         self.nomination_index = 0  # Current index in nomination sequence.
         self.next_up_index = 1 # Next up index in nomination sequence.
@@ -225,77 +227,99 @@ class Auction:
         # Update the nomination index.
         self.update_nomination_index()
 
+        # Reset the cannot_bid_team_reasons dict.
+        self.cannot_bid_team_reasons = {}
+
         return
+
+    def can_bid_formation_logic(self, team, player):
+        if player["position"] == "GKP":
+            # and team already has a GKP, cannot bid.
+            if len(team.squad.players["GKP"]) == 1:
+                result = (False, "Invalid formation (>1 GKP)")
+            else:
+                result = (True, "Can bid")
+        # If player is not a GK
+        else:
+            # and already have 10 outfield players, cannot bid.
+            if len(team.squad.players["DEF"]) + len(team.squad.players["MID"]) + len(team.squad.players["FWD"]) == 10:
+                result = (False, "Invalid formation (>10 outfield)")
+            # If player is a DEF
+            elif player["position"] == "DEF":
+                # and team already has 5 DEFs, cannot bid.
+                if len(team.squad.players["DEF"]) == 5:
+                    result = (False, "Invalid formation (>5 DEF)")
+                # and team has 4 DEFs
+                elif len(team.squad.players["DEF"]) == 4:
+                    # and 5 MIDs, cannot bid.
+                    if len(team.squad.players["MID"]) == 5:
+                        result = (False, "Invalid formation (5/5/0)")
+                    else:
+                        result = (True, "Can bid")
+                else:
+                    result = (True, "Can bid")
+            # If player is a MID
+            elif player["position"] == "MID":
+                # and the team already has 5 MIDs, cannot bid.
+                if len(team.squad.players["MID"]) == 5:
+                    result = (False, "Invalid formation (>5 MID)")
+                # and team has 4 MIDs
+                elif len(team.squad.players["MID"]) == 4:
+                    # and 5 DEFs, cannot bid.
+                    if len(team.squad.players["DEF"]) == 5:
+                        result = (False, "Invalid formation (5/5/0)")
+                    # and 3 FWDs, cannot bid.
+                    elif len(team.squad.players["FWD"]) == 3:
+                        result = (False, "Invalid formation (2/5/3)")
+                    else:
+                        result = (True, "Can bid")
+                else:
+                    result = (True, "Can bid")
+            # If player is a FWD
+            elif player["position"] == "FWD":
+                # and the team already has 3 FWDs, cannot bid.
+                if len(team.squad.players["FWD"]) == 3:
+                    result = (False, "Invalid formation (>3 FWD)")
+                # and the team has 2 FWDs
+                elif len(team.squad.players["FWD"]) == 2:
+                    # and 5 MIDs, cannot bid.
+                    if len(team.squad.players["MID"]) == 5:
+                        result = (False, "Invalid formation (2/5/3)")
+                    else:
+                        result = (True, "Can bid")
+                else:
+                    result = (True, "Can bid")
+            else:
+                result = (False, "Something went wrong with validation logic!")
+
+        return result
 
     def can_bid(self, team, player):
         # Method which takes in team (Team) and player (dict), and returns a tuple with a boolean indicating whether
         # the team can bid for the player or not, and a string representing the reason.
         # If team is complete then cannot bid.
+        result = None
         if team.team_complete == True:
-            return (False, "Team complete.")
+            result = (False, "Team complete")
         # If team already has three players from the club, cannot bid.
         elif player["club"] in team.squad.club_count:
             if team.squad.club_count[player["club"]] == 3:
-                return (False, f"Already have three players from {player['club']}.")
-        # If player is a GKP
-        elif player["position"] == "GKP":
-            # and team already has a GKP, cannot bid.
-            if len(team.squad.players["GKP"]) == 1:
-                return (False, "Invalid formation (>1 GKP).")
+                result = (False, f"Already have three players from {player['club']}")
             else:
-                return (True, "Can bid.")
-        # If player is not a GK
+                result = self.can_bid_formation_logic(team, player)
         else:
-            # and already have 10 outfield players, cannot bid.
-            if len(team.squad.players["DEF"]) + len(team.squad.players["MID"]) + len(team.squad.players["FWD"]) == 10:
-                return (False, "Invalid formation (>10 outfield).")
-            # If player is a DEF
-            elif player["position"] == "DEF":
-                # and team already has 5 DEFs, cannot bid.
-                if len(team.squad.players["DEF"]) == 5:
-                    return (False, "Invalid formation (>5 DEF).")
-                # and team has 4 DEFs
-                elif len(team.squad.players["DEF"]) == 4:
-                    # and 5 MIDs, cannot bid.
-                    if len(team.squad.players["MID"]) == 5:
-                        return (False, "Invalid formation (5/5/0).")
-                    else:
-                        return (True, "Can bid.")
-                else:
-                    return (True, "Can bid.")
-            # If player is a MID
-            elif player["position"] == "MID":
-                # and the team already has 5 MIDs, cannot bid.
-                if len(team.squad.players["MID"]) == 5:
-                    return (False, "Invalid formation (>5 MID).")
-                # and team has 4 MIDs
-                elif len(team.squad.players["MID"]) == 4:
-                    # and 5 DEFs, cannot bid.
-                    if len(team.squad.players["DEF"]) == 5:
-                        return (False, "Invalid formation (5/5/0).")
-                    # and 3 FWDs, cannot bid.
-                    elif len(team.squad.players["FWD"]) == 3:
-                        return (False, "Invalid formation (2/5/3).")
-                    else:
-                        return (True, "Can bid.")
-                else:
-                    return (True, "Can bid.")
-            # If player is a FWD
-            elif player["position"] == "FWD":
-                # and the team already has 3 FWDs, cannot bid.
-                if len(team.squad.players["FWD"]) == 3:
-                    return (False, "Invalid formation (>3 FWD).")
-                # and the team has 2 FWDs
-                elif len(team.squad.players["FWD"]) == 2:
-                    # and 5 MIDs, cannot bid.
-                    if len(team.squad.players["MID"]) == 5:
-                        return (False, "Invalid formation (2/5/3).")
-                    else:
-                        return (True, "Can bid.")
-                else:
-                    return (True, "Can bid.")
+            result = self.can_bid_formation_logic(team, player)
+
+        # If the team cannot bid, add the team name to the list of names for the relevant key in the
+        # cannot_bid_team_reasons dict.
+        if result[0] == False:
+            key = result[1]
+            if key in self.cannot_bid_team_reasons:
+                self.cannot_bid_team_reasons[key] += [team.name]
             else:
-                return (False, "Something went wrong with validation logic!")
+                self.cannot_bid_team_reasons[key] = [team.name]
+
+        return result
 
     def print_teams(self):
         # Method to print the team names out neatly.

@@ -121,6 +121,13 @@ class AuctionLot(tk.Frame):
         self.button_confirm_purchase = tk.Button(self.frame_winning_team, text="Confirm", command=self.confirm_purchase)
         self.button_confirm_purchase.grid(row=1,column=2, sticky='w', padx=self.FRAME_AUCTION_LOT_X_PAD)
 
+        # Create label to hold reasons that teams cannot bid.
+        self.reasons_text = ""
+
+        self.label_cannot_bid_reasons = tk.Label(self.frame_winning_team, text="", font="none 10 bold",
+                                                 justify=tk.LEFT, anchor='w')
+        self.label_cannot_bid_reasons.grid(row=2, column=0, columnspan=3, sticky='nsew', padx=self.FRAME_AUCTION_LOT_X_PAD)
+
 
     def update_teams_list(self, event):
         # Get player.
@@ -232,13 +239,14 @@ class AuctionLot(tk.Frame):
     def select_player(self, event):
         # When a player is selected for auction, run validation checks on all Teams to see which can bid.
         # Display the player image and player info.
-
         player_name = self.combobox_players.get()
         if player_name[0] == '(':  # if player has club in brackets in front of the name
             player_name = player_name[6:]  # drop the first six characters.
         # Get player_id from the end of the combobox input.
         player_id = int(player_name[player_name.index('(')+1:player_name.index(')')])
 
+        # Clear cannot bid reasons from any previous player selections.
+        self.auction.cannot_bid_team_reasons = {}
         player = self.auction.players[player_id]
         for team_name in self.auction.teams:
             team = self.auction.teams[team_name]
@@ -252,6 +260,20 @@ class AuctionLot(tk.Frame):
             else:
                 team_label.config(bg='#dcefa7')
 
+        # Update the label displaying reasons why teams cannot bid, if there are any.
+        # Clear cannot bid reasons from any previous player selections.
+        self.label_cannot_bid_reasons["text"] = ""
+        if len(self.auction.cannot_bid_team_reasons) > 0:
+            self.reasons_text = "Reasons why teams are excluded from bidding below:\n\n"
+            for reason in self.auction.cannot_bid_team_reasons:
+                self.reasons_text += f"{reason}:\t"
+                for team_name in self.auction.cannot_bid_team_reasons[reason]:
+                    self.reasons_text += f"{team_name}, "
+                # Remove trailing space and comma, and add new line.
+                self.reasons_text = self.reasons_text[:-2] + "\n"
+
+            self.label_cannot_bid_reasons["text"] = self.reasons_text
+
         # Display player image and info.
         self.display_player(player_id)
         pass
@@ -263,7 +285,8 @@ class AuctionLot(tk.Frame):
         self.combobox_teams.set("Select winning team:")
         self.entry_winning_bid.delete(0, tk.END)
         self.canvas.image = None
-        self.label_player_info['text'] = ""
+        self.label_player_info["text"] = ""
+        self.label_cannot_bid_reasons["text"] = ""
         return
 
     def confirm_purchase(self):
