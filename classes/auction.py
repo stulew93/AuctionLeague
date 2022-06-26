@@ -1,5 +1,6 @@
 import requests
 import pytz
+import csv
 from datetime import datetime
 from unidecode import unidecode
 from classes.team import Team
@@ -80,6 +81,40 @@ class Auction:
 
         print("Player data loaded.")
         return
+
+    def add_players_from_csv(self, file_path):
+        # Method which will take a filepath to a .csv file containing details of players which are not in the official
+        # FPL game (and hence have not been retrieved by the API call), to be added to the players dict.
+        # Input csv should be in the format: simple_name, first_name, second_name, club (3-letter club code),
+        # position (3-letter position code).
+        # Check file_path is in .csv format.
+        if file_path[-4:] != ".csv":
+            return 'File type not ".csv".'
+        else:
+            with open(file_path, 'r') as file:
+                new_players = csv.DictReader(file)
+                # We need IDs for the new players. Get the max existing id and add 1, and the increment for each new
+                # player that we add.
+                new_player_id = max(self.players.keys()) + 1
+                for player in new_players:
+                    # Define new player dict.
+                    player_dict = {"id": new_player_id,
+                                   "code": None,
+                                   "simple_name_raw": player["simple_name"],
+                                   "simple_name_eng_chars": unidecode(player["simple_name"]),
+                                   # using unidecode to anglicise
+                                   # name for easier searching
+                                   "first_name": player["first_name"],
+                                   "second_name": player["second_name"],
+                                   "club": player["club"],
+                                   "position": player["position"],
+                                   "player_purchased": False
+                                   }
+                    # Add to the players dict for the auction.
+                    self.players[new_player_id] = player_dict
+                    # Increment the player id for the next new player.
+                    new_player_id += 1
+            return "New players added to player list."
 
     def add_team(self, team_name):
         # Add new team to the teams list.
@@ -311,3 +346,9 @@ if __name__ == "__main__":
 
     result = test_auction.can_bid(test_auction.teams["Stuart"], test_auction.players[1])
     print(result)
+
+    result = test_auction.add_players_from_csv("C:/Users/stuar/Documents/PythonFiles/AuctionLeaguev2/new_players_test.csv")
+    print(result)
+
+    mci_players = [player['simple_name_raw'] for player in test_auction.players.values() if player['club'] == 'MCI']
+    print(mci_players)
