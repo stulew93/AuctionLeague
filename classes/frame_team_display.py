@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from classes.auction import Auction
 
 class TeamDisplay(tk.Frame):
@@ -53,13 +54,19 @@ class TeamDisplay(tk.Frame):
         self.team_label_dict = {}
 
     def create_team(self, event=None):
-        # TODO: Pop up message if name is taken or is invalid (e.g. blank entry box).
         new_team_name = self.entry_team_name.get()
-        self.auction.add_team(new_team_name)
-        self.display_teams()
-        self.entry_team_name.delete(0, 'end')
-        print(self.team_label_dict)
-        return
+        result_add_team = self.auction.add_team(new_team_name)
+        if result_add_team == "Team name exists.":
+            messagebox.showinfo("Invalid Team Name", f'The team name "{new_team_name}" is already taken.')
+            return
+        elif result_add_team == "Team name empty.":
+            messagebox.showinfo("Invalid Team Name", f'Please enter a team name.')
+            return
+        else:
+            self.display_teams()
+            self.entry_team_name.delete(0, 'end')
+            print(self.team_label_dict)
+            return
 
     def delete_team(self):
         # TODO: Pop up message if team doesn't exist.

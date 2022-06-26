@@ -88,13 +88,15 @@ class Auction:
         # if team_name in [team.name for team in self.teams]:
         if team_name in self.teams:
             print(f'The team name "{team_name}" is already taken.')
-            return
+            return "Team name exists."
+        elif team_name == "":  # Flag if team_name is blank.
+            return "Team name empty."
         else:
             new_team = Team(team_name)
             # self.teams.append(new_team)
             self.teams[team_name] = new_team
             print(f"Team {team_name} added successfully.")
-            return
+            return "Team added."
 
     def delete_team(self, team_name):
         # TODO: Ensure to return any players associated with the team back to the available pool.
